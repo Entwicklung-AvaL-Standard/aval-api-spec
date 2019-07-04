@@ -1,0 +1,211 @@
+swagger: "2.0"
+info:
+  description: "AvaL specification..."
+  version: "1.0.0"
+  title: "AvaL API"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "aval@bde.de"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "technik.gipaservice.de:8101"
+basePath: "/aval-public-api/v1"
+tags:
+- name: "AvaL API"
+  description: "BDE AvaL API"
+  externalDocs:
+    description: "Find out more about BDE and AvaL"
+    url: "https://bde.de"
+schemes:
+- "https"
+paths:
+  /avalmatchings:
+    post:
+      tags:
+      - "AvaL Matchings"
+      summary: "Create a new AvaL matching"
+      description: ""
+      operationId: "createAvalMatching"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "AvaL matching which should be created"
+        required: true
+        schema:
+          $ref: "#/definitions/AvalMatching"
+      responses:
+        400:
+          description: "Required parameters missing or provided AvaL state is invalid."
+        409:
+          description: "Provided AvaL ID is already in use."
+  /avalmatchings/{avalId}:
+    patch:
+      tags:
+      - "AvaL Matchings"
+      summary: "Update an existing AvaL matching"
+      description: ""
+      operationId: "updateAvalMatching"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "avalId"
+        in: "path"
+        description: "ID of AvaL matching that needs to be updated"
+        required: true
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "AvaL matching which should be updated."
+        required: true
+        schema:
+          $ref: "#/definitions/AvalMatching"
+      responses:
+        400:
+          description: "Invalid state (wrong number), missing attributes or something else."
+        404:
+          description: "AvaL matching not found."
+        405:
+          description: "Validation exception because of incorrect state transition."
+  /avalmatchings/{avalId}/avaltransactions:
+    post:
+      tags:
+      - "AvaL Transactions"
+      summary: "Transactions of an AvaL matching"
+      description: ""
+      operationId: "createAvalTransaction"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "avalId"
+        in: "path"
+        description: "ID of the AvaL matching for the AvaL transactions."
+        required: true
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "AvaL transaction which should be created."
+        required: true
+        schema:
+          $ref: "#/definitions/AvalTransaction"
+      responses:
+        200:
+          description: "successful operation"
+    patch:
+      tags:
+      - "AvaL Transactions"
+      summary: "Update an existing AvaL transaction"
+      description: ""
+      operationId: "updateAvalTransaction"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL matching which owns the transaction"
+          required: true
+          type: "string"
+          format: "uuid"
+        - name: "transactionId"
+          in: "path"
+          description: "ID of AvaL transaction which should be updated"
+          required: true
+          type: "string"
+          format: "uuid"
+        - in: "body"
+          name: "body"
+          description: "AvaL transaction which should be updated."
+          required: true
+          schema:
+            $ref: "#/definitions/AvalTransaction"
+      responses:
+        400:
+          description: "Invalid state (wrong number), missing attributes or something else."
+        404:
+          description: "AvaL transaction not found."
+        405:
+          description: "Validation exception because of incorrect state transition."
+        200:
+          description: "successful operation"
+definitions:
+  AvalMatching:
+    type: "object"
+    required:
+      - id
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      state:
+        type: "integer"
+        format: "int32"
+        example: 1
+        ## TODO one of
+      client:
+        $ref: "#/definitions/Client"
+      supplier:
+        $ref: "#/definitions/Supplier"
+  Client:
+    type: object
+    properties:
+      contractPartner:
+        type: "string"
+      material:
+        type: "string"
+      containerType: 
+        type: "string"
+      serviceType: 
+        type: "string" 
+      performancePlace: 
+        type: "string"
+        example: "Musterstraße 43, 22041 Hamburg"
+      materialUnit:
+        type: "string"
+      serviceUnit: 
+        type: "string"
+        example: "S" 
+      cycleInformation: 
+        type: "boolean"
+        example: false
+      cycleRythm:
+        type: "string"
+  Supplier:
+    type: object
+    properties:
+      contractPartner:
+        type: string
+      material:
+        type: string
+  AvalTransaction:
+    type: "object"
+    required:
+      - id
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      state:
+        type: "integer"
+        format: "int32"
+        maximum: 10
+        minimum: 1
+        example: 1
+      containerAmount:
+        type: "integer"
+        format: "int32"
+        example: 2
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
