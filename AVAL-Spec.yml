@@ -223,6 +223,13 @@ definitions:
       avalId:
         type: "string"
         format: "uuid"
+      operationPeriod:
+        $ref: '#/definitions/Period'
+      fulfillmentTimestamp:
+        type: "string"
+        format: "date-time"
+      planedFulfillmentPeriod:
+        $ref: '#/definitions/Period'
       serviceAmount:
         type: "integer"
         format: "int32"
@@ -274,6 +281,17 @@ definitions:
       alternateMatchedAvalId:
         type: "string"
         format: "uuid"
+  Period:
+    type: "object"
+    properties:
+      start:
+        type: "string"
+        format: "date-time"
+        example: "2019-07-01T14:00:00Z"
+      end:
+        type: "string"
+        format: "date-time"
+        example: "2019-07-01T18:00:00Z"
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
