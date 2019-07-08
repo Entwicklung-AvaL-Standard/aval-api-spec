@@ -9,8 +9,6 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "technik.gipaservice.de:8101"
-basePath: "/aval-public-api/v1"
 tags:
   - name: "AvaL API"
     description: "BDE AvaL API"
