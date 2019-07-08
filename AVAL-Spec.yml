@@ -12,32 +12,32 @@ info:
 host: "technik.gipaservice.de:8101"
 basePath: "/aval-public-api/v1"
 tags:
-- name: "AvaL API"
-  description: "BDE AvaL API"
-  externalDocs:
-    description: "Find out more about BDE and AvaL"
-    url: "https://bde.de"
+  - name: "AvaL API"
+    description: "BDE AvaL API"
+    externalDocs:
+      description: "Find out more about BDE and AvaL"
+      url: "https://bde.de"
 schemes:
-- "https"
+  - "https"
 paths:
   /avalmatchings:
     post:
       tags:
-      - "AvaL Matchings"
+        - "AvaL Matchings"
       summary: "Create a new AvaL matching"
       description: ""
       operationId: "createAvalMatching"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "AvaL matching which should be created"
-        required: true
-        schema:
-          $ref: "#/definitions/AvalMatching"
+        - in: "body"
+          name: "body"
+          description: "AvaL matching which should be created"
+          required: true
+          schema:
+            $ref: "#/definitions/AvalMatching"
       responses:
         400:
           description: "Required parameters missing or provided AvaL state is invalid."
@@ -46,27 +46,27 @@ paths:
   /avalmatchings/{avalId}:
     patch:
       tags:
-      - "AvaL Matchings"
+        - "AvaL Matchings"
       summary: "Update an existing AvaL matching"
       description: ""
       operationId: "updateAvalMatching"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "avalId"
-        in: "path"
-        description: "ID of AvaL matching that needs to be updated"
-        required: true
-        type: "string"
-        format: "uuid"
-      - in: "body"
-        name: "body"
-        description: "AvaL matching which should be updated."
-        required: true
-        schema:
-          $ref: "#/definitions/AvalMatching"
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL matching that needs to be updated"
+          required: true
+          type: "string"
+          format: "uuid"
+        - in: "body"
+          name: "body"
+          description: "AvaL matching which should be updated."
+          required: true
+          schema:
+            $ref: "#/definitions/AvalMatching"
       responses:
         400:
           description: "Invalid state (wrong number), missing attributes or something else."
@@ -77,33 +77,34 @@ paths:
   /avalmatchings/{avalId}/avaltransactions:
     post:
       tags:
-      - "AvaL Transactions"
+        - "AvaL Transactions"
       summary: "Transactions of an AvaL matching"
       description: ""
       operationId: "createAvalTransaction"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "avalId"
-        in: "path"
-        description: "ID of the AvaL matching for the AvaL transactions."
-        required: true
-        type: "string"
-        format: "uuid"
-      - in: "body"
-        name: "body"
-        description: "AvaL transaction which should be created."
-        required: true
-        schema:
-          $ref: "#/definitions/AvalTransaction"
+        - name: "avalId"
+          in: "path"
+          description: "ID of the AvaL matching for the AvaL transactions."
+          required: true
+          type: "string"
+          format: "uuid"
+        - in: "body"
+          name: "body"
+          description: "AvaL transaction which should be created."
+          required: true
+          schema:
+            $ref: "#/definitions/AvalTransaction"
       responses:
         200:
           description: "successful operation"
+  /avalmatchings/{avalId}/avaltransactions/{transactionId}:
     patch:
       tags:
-      - "AvaL Transactions"
+        - "AvaL Transactions"
       summary: "Update an existing AvaL transaction"
       description: ""
       operationId: "updateAvalTransaction"
@@ -164,23 +165,28 @@ definitions:
         type: "string"
       material:
         type: "string"
-      containerType: 
+        example: "Papier"
+      containerType:
         type: "string"
-      serviceType: 
-        type: "string" 
-      performancePlace: 
+        example: "MGB 1100 cbm"
+      serviceType:
+        type: "string"
+        example: "Austausch"
+      performancePlace:
         type: "string"
         example: "Musterstraße 43, 22041 Hamburg"
       materialUnit:
         type: "string"
-      serviceUnit: 
+        example: "to"
+      serviceUnit:
         type: "string"
-        example: "S" 
-      cycleInformation: 
+        example: "S"
+      cycleInformation:
         type: "boolean"
-        example: false
+        example: true
       cycleRythm:
         type: "string"
+        example: "14-täglich"
   Supplier:
     type: object
     properties:
@@ -202,10 +208,60 @@ definitions:
         maximum: 10
         minimum: 1
         example: 1
+      avalId:
+        type: "string"
+        format: "uuid"
+      serviceAmount:
+        type: "integer"
+        format: "int32"
+        example: 1
       containerAmount:
         type: "integer"
         format: "int32"
         example: 2
+      materialAmount:
+        type: "number"
+        format: "double"
+        example: 0.256
+      isUnderMeasureThreshold:
+        type: "boolean"
+        example: false
+      serviceNoteNumber:
+        type: "string"
+        example: "DL-4711"
+      measureNoteNumber:
+        type: "string"
+        example: "WS-0815"
+      governmentalAssetNumber:
+        type: "string"
+      gonvernmentalCarrierNumber:
+        type: "string"
+      orderNumberSupplier:
+        type: "string"
+        example: "LFS_123456"
+      orderNumberClient:
+        type: "string"
+        example: "ERP_987654"
+      logisticComments:
+        type: "string"
+        example: "Bitte hinter dem Gebäude herum fahren!"
+      cancellationReason:
+        type: "string"
+        example: "Tor verschlossen"
+      complaintReason:
+        type: "integer"
+        format: "int32"
+        minimum: 100
+        maximum: 405
+        example: 303
+      variationNotes:
+        type: "string"
+      alternateAvalId:
+        type: "string"
+        format: "uuid"
+      alternateMatchedAvalId:
+        type: "string"
+        format: "uuid"
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
