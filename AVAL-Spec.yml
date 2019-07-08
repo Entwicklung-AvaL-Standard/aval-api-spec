@@ -39,10 +39,14 @@ paths:
           schema:
             $ref: "#/definitions/AvalMatching"
       responses:
+        200:
+          description: "Successful operation."
         400:
-          description: "Required parameters missing or provided AvaL state is invalid."
+          description: "The provided AvaL matching does not fulfill the specifications. Required parameters missing or provided AvaL state is invalid. Details may be included within the response body."
         409:
-          description: "Provided AvaL ID is already in use."
+          description: "Provided AvaL matching ID is already in use."
+        500:
+          description: "An unexpected error occurred. Details may be included within the response body."
   /avalmatchings/{avalId}:
     patch:
       tags:
@@ -68,12 +72,14 @@ paths:
           schema:
             $ref: "#/definitions/AvalMatching"
       responses:
-        400:
-          description: "Invalid state (wrong number), missing attributes or something else."
+        200:
+          description: "Successful operation."
         404:
           description: "AvaL matching not found."
         405:
           description: "Validation exception because of incorrect state transition."
+        500:
+          description: "An unexpected error occurred. Details may be included within the response body."
   /avalmatchings/{avalId}/avaltransactions:
     post:
       tags:
@@ -100,7 +106,13 @@ paths:
             $ref: "#/definitions/AvalTransaction"
       responses:
         200:
-          description: "successful operation"
+          description: "Successful operation."
+        400:
+          description: "The provided AvaL transaction does not fulfill the specifications. This may happen because the related AvaL matching is not in a corresponding state. Details may be included within the response body."
+        409:
+          description: "Provided AvaL transaction ID is already in use."
+        500:
+          description: "An unexpected error occurred. Details may be included within the response body."
   /avalmatchings/{avalId}/avaltransactions/{transactionId}:
     patch:
       tags:
@@ -132,14 +144,16 @@ paths:
           schema:
             $ref: "#/definitions/AvalTransaction"
       responses:
+        200:
+          description: "Successful operation."
         400:
           description: "Invalid state (wrong number), missing attributes or something else."
         404:
           description: "AvaL transaction not found."
         405:
           description: "Validation exception because of incorrect state transition."
-        200:
-          description: "successful operation"
+        500:
+          description: "An unexpected error occurred. Details may be included within the response body."
 definitions:
   AvalMatching:
     type: "object"
