@@ -152,6 +152,58 @@ paths:
           description: "Validation exception because of incorrect state transition."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
+  /avalmatchings/{avalId}/avaltransactions/{transactionId}/avaldocuments:
+    post:
+      tags:
+        - "AvaL Documents"
+      summary: "Add a document to an existing AvaL transaction"
+      description: "See https://tools.ietf.org/html/rfc7578 for further information about the multipart content type."
+      operationId: "postAvalDocument"
+      consumes:
+        - "multipart/form-data"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL matching which owns the transaction"
+          required: true
+          type: "string"
+          format: "uuid"
+        - name: "transactionId"
+          in: "path"
+          description: "ID of AvaL transaction which should be updated"
+          required: true
+          type: "string"
+          format: "uuid"
+        - in: "formData"
+          name: "documentId"
+          type: "string"
+          format: "uuid"
+          required: true
+        - in: "formData"
+          name: "filename"
+          type: "string"
+          required: true
+        - in: "formData"
+          name: "fileType"
+          type: "number"
+          required: true
+        - in: "formData"
+          name: "fileFormat"
+          type: "string"
+          required: true
+        - in: "formData"
+          name: "file"
+          type: "file"
+          required: true
+      responses:
+        200:
+          description: "Document successfully uploaded."
+        400:
+          description: "The provided AvaL document does not fulfill the specifications. Details may be included within the response body."
+        409:
+          description: "Provided AvaL document ID is already in use."
+        500:
+          description: "An unexpected error occurred. Details may be included within the response body."
 definitions:
   AvalMatching:
     type: "object"
