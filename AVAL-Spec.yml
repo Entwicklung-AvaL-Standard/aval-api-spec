@@ -185,7 +185,8 @@ paths:
           required: true
         - in: "formData"
           name: "fileType"
-          type: "number"
+          type: "integer"
+          format: "int32"
           required: true
         - in: "formData"
           name: "fileFormat"
