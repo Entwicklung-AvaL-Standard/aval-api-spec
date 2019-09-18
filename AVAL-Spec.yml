@@ -200,12 +200,35 @@ definitions:
         type: "string"
         example: "14-täglich"
   Supplier:
-    type: object
+    type: "object"
     properties:
       contractPartner:
-        type: string
+        type: "string"
+        example: "Mustermann GmbH"
       material:
-        type: string
+        type: "string"
+        example: "Papier"
+      containerType:
+        type: "string"
+        example: "MGB 1100 cbm"
+      serviceType:
+        type: "string"
+        example: "Austausch"
+      performancePlace:
+        type: "string"
+        example: "Musterstr. 43, D-22041 Hamburg"
+      materialUnit:
+        type: "string"
+        example: "to"
+      serviceUnit:
+        type: "string"
+        example: "S"
+      cycleInformation:
+        type: "boolean"
+        example: true
+      cycleRythm:
+        type: "string"
+        example: "14 täglich"
   AvalTransaction:
     type: "object"
     required:
