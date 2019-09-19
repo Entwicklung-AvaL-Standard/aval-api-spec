@@ -72,6 +72,8 @@ paths:
       responses:
         200:
           description: "Successful operation."
+        400:
+          description: "Provided AvaL matching ID of the request body does not correspond to the matching ID within the URI path."
         404:
           description: "AvaL matching not found."
         405:
