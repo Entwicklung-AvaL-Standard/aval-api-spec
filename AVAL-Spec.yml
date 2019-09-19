@@ -281,7 +281,7 @@ definitions:
       fulfillmentTimestamp:
         type: "string"
         format: "date-time"
-      planedFulfillmentPeriod:
+      plannedFulfillmentPeriod:
         $ref: '#/definitions/Period'
       serviceAmount:
         type: "integer"
@@ -306,7 +306,7 @@ definitions:
         example: "WS-0815"
       governmentalAssetNumber:
         type: "string"
-      gonvernmentalCarrierNumber:
+      governmentalCarrierNumber:
         type: "string"
       orderNumberSupplier:
         type: "string"
