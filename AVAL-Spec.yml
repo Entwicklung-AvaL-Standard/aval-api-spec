@@ -212,6 +212,7 @@ definitions:
     type: "object"
     required:
       - id
+      - state
     properties:
       id:
         type: "string"
@@ -288,6 +289,7 @@ definitions:
     type: "object"
     required:
       - id
+      - state
     properties:
       id:
         type: "string"
