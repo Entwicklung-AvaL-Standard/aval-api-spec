@@ -77,7 +77,7 @@ paths:
         404:
           description: "AvaL matching not found."
         405:
-          description: "Validation exception because of incorrect state ition."
+          description: "Validation exception because of incorrect state transition."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
   /avalmatchings/{avalId}/avaltransactions:
