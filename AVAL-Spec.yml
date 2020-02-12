@@ -1,20 +1,20 @@
 swagger: "2.0"
 info:
-  description: "AvaL specification..."
+  description: "AvaL specification"
   version: "1.0.0"
   title: "AvaL API"
   termsOfService: "http://swagger.io/terms/"
   contact:
-    email: "aval@bde.de"
+    email: "entwicklung@avalstandard.de"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
   - name: "AvaL API"
-    description: "BDE AvaL API"
+    description: "AvaL API"
     externalDocs:
-      description: "Find out more about BDE and AvaL"
-      url: "https://bde.de"
+      description: "Find out more about AvaL"
+      url: "https://www.avalstandard.de/"
 schemes:
   - "https"
 paths:
@@ -77,7 +77,7 @@ paths:
         404:
           description: "AvaL matching not found."
         405:
-          description: "Validation exception because of incorrect state transition."
+          description: "Validation exception because of incorrect state ition."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
   /avalmatchings/{avalId}/avaltransactions:
