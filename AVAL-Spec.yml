@@ -185,14 +185,11 @@ paths:
           name: "filename"
           type: "string"
           required: true
+          description: "The full filename including any file ending / extension"
         - in: "formData"
           name: "fileType"
           type: "integer"
           format: "int32"
-          required: true
-        - in: "formData"
-          name: "fileFormat"
-          type: "string"
           required: true
         - in: "formData"
           name: "file"
