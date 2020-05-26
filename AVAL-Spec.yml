@@ -253,7 +253,7 @@ definitions:
       cycleInformation:
         type: "boolean"
         example: true
-      cycleRythm:
+      cycleRhythm:
         type: "string"
         example: "14-täglich"
   Supplier:
@@ -283,7 +283,7 @@ definitions:
       cycleInformation:
         type: "boolean"
         example: true
-      cycleRythm:
+      cycleRhythm:
         type: "string"
         example: "14 täglich"
   AvalTransaction:
