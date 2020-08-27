@@ -349,11 +349,9 @@ definitions:
         type: "string"
         example: "Tor verschlossen"
       complaintReason:
-        type: "integer"
-        format: "int32"
-        minimum: 100
-        maximum: 405
-        example: 303
+        type: "string"
+        description: "Only AvaL IDs from https://www.avalstandard.de/aval-stammdaten-webapi/catalog/AV.1/entries are allowed here."
+        example: "AV.1.104"
       variationNotes:
         type: "string"
       alternateAvalId:
