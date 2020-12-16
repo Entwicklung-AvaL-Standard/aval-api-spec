@@ -250,12 +250,10 @@ definitions:
       serviceUnit:
         type: "string"
         example: "S"
-      cycleInformation:
-        type: "boolean"
-        example: true
-      cycleRhythm:
+      cycleInterval:
         type: "string"
-        example: "14-täglich"
+        description: "Only AvaL IDs from https://www.avalstandard.de/aval-stammdaten-webapi/catalog/AZ.1/entries are allowed here."
+        example: "AZ.10.2.0.0"
   Supplier:
     type: "object"
     properties:
@@ -280,12 +278,10 @@ definitions:
       serviceUnit:
         type: "string"
         example: "S"
-      cycleInformation:
-        type: "boolean"
-        example: true
-      cycleRhythm:
+      cycleInterval:
         type: "string"
-        example: "14 täglich"
+        description: "Only AvaL IDs from https://www.avalstandard.de/aval-stammdaten-webapi/catalog/AZ.1/entries are allowed here."
+        example: "AZ.10.2.0.0"
   AvalTransaction:
     type: "object"
     required:
