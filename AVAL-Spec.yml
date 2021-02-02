@@ -115,11 +115,13 @@ paths:
           description: "Provided AvaL matching ID is already in use."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
+        501:
+          description: "The processing of 'AvaL2Matching' entities is optional and not yet implemented for this API."
   /aval2matchings/{avalId}:
     patch:
       tags:
-        - "AvaL Matchings"
-      summary: "Update an existing AvaL matching"
+        - "AvaL2Matchings"
+      summary: "Update an existing 'AvaL2Matching'"
       description: ""
       operationId: "updateAval2Matching"
       consumes:
@@ -150,6 +152,8 @@ paths:
           description: "Validation exception because of incorrect state transition."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
+        501:
+          description: "The processing of 'AvaL2Matching' entities is optional and not yet implemented for this API."
   /avalmatchings/{avalId}/avaltransactions:
     post:
       tags:
