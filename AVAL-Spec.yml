@@ -80,6 +80,76 @@ paths:
           description: "Validation exception because of incorrect state transition."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
+  /aval2matchings:
+    post:
+      tags:
+        - "AvaL Matchings"
+      summary: "Create a new AvaL matching"
+      description: "For creating a new aval-matching beside for the required paramters according to Aval2Matching it is required to provide the following fields:    - taskSite
+      - groupId
+      - period
+      - service
+      - cycleInterval
+      - serviceUom
+      - requiredDocuments
+      - needServiceResponse
+      - needPurchaseOrder"
+      operationId: "createAval2Matching"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "AvaL matching which should be created"
+          required: true
+          schema:
+            $ref: "#/definitions/Aval2Matching"
+      responses:
+        200:
+          description: "Successful operation."
+        400:
+          description: "The provided AvaL matching does not fulfill the specifications. Required parameters missing or provided AvaL state is invalid. Details may be included within the response body."
+        409:
+          description: "Provided AvaL matching ID is already in use."
+        500:
+          description: "An unexpected error occurred. Details may be included within the response body."
+  /aval2matchings/{avalId}:
+    patch:
+      tags:
+        - "AvaL Matchings"
+      summary: "Update an existing AvaL matching"
+      description: ""
+      operationId: "updateAval2Matching"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL matching that needs to be updated"
+          required: true
+          type: "string"
+          format: "uuid"
+        - in: "body"
+          name: "body"
+          description: "AvaL matching which should be updated. It is only allowed to update the state and the end of the period of an existing Aval2Matching - in all other cases a new Aval2Matching needs to be performed"
+          required: true
+          schema:
+            $ref: "#/definitions/Aval2Matching"
+      responses:
+        200:
+          description: "Successful operation."
+        400:
+          description: "Provided AvaL matching ID of the request body does not correspond to the matching ID within the URI path."
+        404:
+          description: "AvaL matching not found."
+        405:
+          description: "Validation exception because of incorrect state transition."
+        500:
+          description: "An unexpected error occurred. Details may be included within the response body."
   /avalmatchings/{avalId}/avaltransactions:
     post:
       tags:
@@ -286,6 +356,161 @@ definitions:
       cycleRhythm:
         type: "string"
         example: "14 täglich"
+  Aval2Matching:
+    type: "object"
+    required:
+      - id
+      - state
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      state:
+        type: "string"
+        enum: [ NEW, ACCEPTED, REJECTED, ENDED ]
+        example: "NEW"
+      taskSite:
+        # Leistungsort/Anfallstelle
+        $ref: "#/definitions/Site"
+      custSite:
+        # Customer(group) for the taskSite
+        $ref: "#/definitions/Site"
+      billSite:
+        # Invoice to
+        $ref: "#/definitions/Site"
+      disposalSite:
+        # Location to deliver material to
+        $ref: "#/definitions/Site"
+      baseContract:
+        type: "string"
+        example: "HORNBACH"
+        description: "As agreed upon in a base contract, may define conditions/prices/..."
+      groupId:
+        type: "string"
+        format: "uuid"
+        description: "allows for grouping of aval-ids,e.g. provisioning, rent, disposal or decomission"
+      period:
+        $ref: "#/definitions/Period"
+      service:
+        type: "string"
+        example: "AL.1.13.19.0"
+        description: "AvaL-ID of the service"
+      serviceUom:
+        type: "string"
+        example: "AE.1.400"
+        description: "AvaL-ID of the UOM (example: pieces)"
+      material:
+        type: "string"
+        example: "AS.1.91.150106.0.0"
+        description: "AvaL-ID of the material"
+      materialUom:
+        type: "string"
+        example: "AE.1.103"
+        description: "AvaL-ID of the UOM (example: tons)"
+      container:
+        type: "string"
+        example: "AB.1.11.2500.0"
+        description: "AvaL-ID of the container"
+      containerAmount:
+        type: "integer"
+        format: "int32"
+        example: 2
+      cycleInterval:
+        type: "string"
+        description: "Only AvaL IDs from https://www.avalstandard.de/aval-stammdaten-webapi/catalog/AZ.1/entries are allowed here."
+        example: "AZ.1.02.0.0.0"
+      cyclePeriod:
+        $ref: "#/definitions/Period"
+      requiredDocuments:
+        type: "array"
+        description: "document types as Defined in AvalDocuments/fileType"
+        items:
+          type: "integer"
+          format: "int32"
+      gracePeriod:
+        type: "integer"
+        example: "5"
+        description: "time for execution in working days after sending AvalTransaction or number of (working) days before rent payment starts. Can be omitted if there is a baseContract"
+      needServiceResponse:
+        type: "boolean"
+        example: "true"
+        description: "is sending back a Service Response (Rückmeldung, status=9/10) required?"
+      needPurchaseOrder:
+        type: "boolean"
+        example: "true"
+        description: "is there a 'Beauftragung' by the AG?"
+      priceReference:
+        type: "string"
+        example: "SERVICE"
+        enum: [ SERVICE, MATERIAL, CONTAINER, FLAT ]
+      price:
+        type: "number"
+        description: "price in priceCurrency per priceReference"
+      priceCurrency:
+        type: "string"
+        example: "EUR"
+        description: "currency code according to ISO 4217 (3 letter)"
+      logisticComment:
+        type: "string"
+        example: "Wenn Tor verschlossen: 777 anrufen"
+        description: "comment for logistic special-handling"
+      extendedInformation:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/AdditionalContent'
+  Site:
+    type: "object"
+    required:
+      - name
+      - street
+      - plz
+      - city
+      - country
+      - referenceSource
+      - siteReference
+    properties:
+      name:
+        type: "string"
+        example: "Mustermann GmbH"
+      street:
+        type: "string"
+        example: "Stollwerckstr. 9"
+      plz:
+        type: "string"
+        example: "50996"
+      city:
+        type: "string"
+        example: "Köln"
+      country:
+        type: "string"
+        example: "DE"
+        description: "2 Character ISO Code"
+      siteDescription:
+        type: "string"
+        example: "Tor 2"
+      geoLongitude:
+        type: "number"
+        format: "float"
+        minimum: -180
+        maximum: 180
+        description: "Geo-Cordinate for longitude in WGS84 reference system in decimal degree (DDD.DDDDD°)"
+      geoLatitude:
+        type: "number"
+        format: "float"
+        minimum: -90
+        maximum: 90
+        description: "Geo-Cordinate for latitude in WGS84 reference system in decimal degree (DDD.DDDDD°)"
+      GovernmentNumber:
+        type: "string"
+        description: "In Germany: EANV"
+      referenceSource:
+        type: "string"
+        enum: [ GLN, AVAL, SENDER ]
+        example: "SENDER"
+      siteReference:
+        type: "string"
+        example: "244377"
+        description: "reference number according to the referenceSource; if SENDER=internal to the sending system, for the receiver to lookup in a sender-specific lookup table. For AVAL/EANV/GLN to be further detailed"
   AvalTransaction:
     type: "object"
     required:
