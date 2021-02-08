@@ -632,14 +632,16 @@ definitions:
         example: "A 123 987 456"
   ApiInformation:
     type: "object"
+    required:
+      - level
     properties:
-      apiVersion:
-        type: "string"
-        example: "21.2.4"
       level:
         type: "string"
         enum: [ basic, comfort, extended ]
         example: "basic"
+      apiVersion:
+        type: "string"
+        example: "21.2.4"
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
