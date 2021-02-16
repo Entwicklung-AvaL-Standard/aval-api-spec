@@ -1,9 +1,36 @@
 swagger: "2.0"
 info:
-  description: "AvaL specification"
+  description: |
+    AvaL specification file.
+
+    This specification contains descriptions for all AvaL related API operations.
+    Furthermore any API implementer has to provide all of the mandatory functions of this spec file. Optional
+    operations are indicated by HTTP response code 501. Optional attribute are not listed within the tag named
+    'required'.
+
+    The spec contains two types of AvaL matchings.
+    * AvaL Matching (see definition _AvalMatching_) without contract information
+    * AvaL __2__ Matching (see definition _Aval2Matching_) with contract information
+
+    Your API must support at least AvaL Matchings, supporting AvaL 2 Matching is optional. All orders are processed
+    via so-called AvaL Transactions (see definiton _AvalTransaction_), regardless of their matching type.
+
+    API levels:
+    * basic: The API supports handling of the AvaL Matching type
+    * comfort: The API supports handling of __both__ AvaL Matching types
+    * extended: _to be defined_
+
+    Further information:
+    * [AvaL Documents](https://www.avalstandard.de/download/dokumente) (written in German language)
+    * [AvaL Organization on Github](https://github.com/Entwicklung-AvaL-Standard)
+
+    Contact:
+    * [Contact form](https://www.avalstandard.de/kontaktformular)
+    * [Contact persons](https://www.avalstandard.de/kontakt/ansprechpartner)
+
   version: "1.0.0"
-  title: "AvaL API"
-  termsOfService: "http://swagger.io/terms/"
+  title: "AvaL API specification"
+  termsOfService: "https://www.avalstandard.de/impressum"
   contact:
     email: "entwicklung@avalstandard.de"
   license:
@@ -22,7 +49,7 @@ paths:
     post:
       tags:
         - "AvaL Matchings"
-      summary: "Create a new AvaL matching"
+      summary: "Create a new AvaL Matching"
       description: ""
       operationId: "createAvalMatching"
       consumes:
@@ -40,16 +67,16 @@ paths:
         200:
           description: "Successful operation."
         400:
-          description: "The provided AvaL matching does not fulfill the specifications. Required parameters missing or provided AvaL state is invalid. Details may be included within the response body."
+          description: "The provided AvaL Matching does not fulfill the specifications. Required parameters missing or provided AvaL state is invalid. Details may be included within the response body."
         409:
-          description: "Provided AvaL matching ID is already in use."
+          description: "Provided AvaL Matching ID is already in use."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
   /avalmatchings/{avalId}:
     patch:
       tags:
         - "AvaL Matchings"
-      summary: "Update an existing AvaL matching"
+      summary: "Update an existing AvaL Matching"
       description: ""
       operationId: "updateAvalMatching"
       consumes:
@@ -59,13 +86,13 @@ paths:
       parameters:
         - name: "avalId"
           in: "path"
-          description: "ID of AvaL matching that needs to be updated"
+          description: "ID of AvaL Matching that needs to be updated"
           required: true
           type: "string"
           format: "uuid"
         - in: "body"
           name: "body"
-          description: "AvaL matching which should be updated."
+          description: "AvaL Matching which should be updated."
           required: true
           schema:
             $ref: "#/definitions/AvalMatching"
@@ -73,9 +100,9 @@ paths:
         200:
           description: "Successful operation."
         400:
-          description: "Provided AvaL matching ID of the request body does not correspond to the matching ID within the URI path."
+          description: "Provided AvaL Matching ID of the request body does not correspond to the matching ID within the URI path."
         404:
-          description: "AvaL matching not found."
+          description: "AvaL Matching not found."
         405:
           description: "Validation exception because of incorrect state transition."
         500:
@@ -84,16 +111,18 @@ paths:
     post:
       tags:
         - "AvaL Matchings"
-      summary: "Create a new AvaL matching"
-      description: "For creating a new aval-matching beside for the required paramters according to Aval2Matching it is required to provide the following fields:    - taskSite
-      - groupId
-      - period
-      - service
-      - cycleInterval
-      - serviceUom
-      - requiredDocuments
-      - needServiceResponse
-      - needPurchaseOrder"
+      summary: "Create a new AvaL 2 Matching"
+      description: |
+        For creating a new aval-matching beside for the required paramters according to Aval2Matching it is required to provide the following fields:
+        * taskSite
+        * groupId
+        * period
+        * service
+        * cycleInterval
+        * serviceUom
+        * requiredDocuments
+        * needServiceResponse
+        * needPurchaseOrder
       operationId: "createAval2Matching"
       consumes:
         - "application/json"
@@ -102,7 +131,7 @@ paths:
       parameters:
         - in: "body"
           name: "body"
-          description: "AvaL matching which should be created"
+          description: "AvaL 2 Matching which should be created"
           required: true
           schema:
             $ref: "#/definitions/Aval2Matching"
@@ -110,9 +139,9 @@ paths:
         200:
           description: "Successful operation."
         400:
-          description: "The provided AvaL matching does not fulfill the specifications. Required parameters missing or provided AvaL state is invalid. Details may be included within the response body."
+          description: "The provided AvaL Matching does not fulfill the specifications. Required parameters missing or provided AvaL state is invalid. Details may be included within the response body."
         409:
-          description: "Provided AvaL matching ID is already in use."
+          description: "Provided AvaL Matching ID is already in use."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
         501:
@@ -121,7 +150,7 @@ paths:
     patch:
       tags:
         - "AvaL2Matchings"
-      summary: "Update an existing 'AvaL2Matching'"
+      summary: "Update an existing AvaL 2 Matching"
       description: ""
       operationId: "updateAval2Matching"
       consumes:
@@ -131,13 +160,13 @@ paths:
       parameters:
         - name: "avalId"
           in: "path"
-          description: "ID of AvaL matching that needs to be updated"
+          description: "ID of AvaL 2 Matching that needs to be updated"
           required: true
           type: "string"
           format: "uuid"
         - in: "body"
           name: "body"
-          description: "AvaL matching which should be updated. It is only allowed to update the state and the end of the period of an existing Aval2Matching - in all other cases a new Aval2Matching needs to be performed"
+          description: "AvaL 2 Matching which should be updated. It is only allowed to update the state and the end of the period of an existing Aval2Matching - in all other cases a new Aval2Matching needs to be performed"
           required: true
           schema:
             $ref: "#/definitions/Aval2Matching"
@@ -145,9 +174,9 @@ paths:
         200:
           description: "Successful operation."
         400:
-          description: "Provided AvaL matching ID of the request body does not correspond to the matching ID within the URI path."
+          description: "Provided AvaL 2 Matching ID of the request body does not correspond to the matching ID within the URI path."
         404:
-          description: "AvaL matching not found."
+          description: "AvaL 2 Matching not found."
         405:
           description: "Validation exception because of incorrect state transition."
         500:
@@ -158,7 +187,7 @@ paths:
     post:
       tags:
         - "AvaL Transactions"
-      summary: "Transactions of an AvaL matching"
+      summary: "Transactions of an AvaL Matching (regardless of matching type)"
       description: ""
       operationId: "createAvalTransaction"
       consumes:
@@ -168,13 +197,13 @@ paths:
       parameters:
         - name: "avalId"
           in: "path"
-          description: "ID of the AvaL matching for the AvaL transactions."
+          description: "ID of the AvaL Matching for the AvaL Transactions."
           required: true
           type: "string"
           format: "uuid"
         - in: "body"
           name: "body"
-          description: "AvaL transaction which should be created."
+          description: "AvaL Transaction which should be created."
           required: true
           schema:
             $ref: "#/definitions/AvalTransaction"
@@ -182,16 +211,16 @@ paths:
         200:
           description: "Successful operation."
         400:
-          description: "The provided AvaL transaction does not fulfill the specifications. This may happen because the related AvaL matching is not in a corresponding state. Details may be included within the response body."
+          description: "The provided AvaL Transaction does not fulfill the specifications. This may happen because the related AvaL Matching is not in a corresponding state. Details may be included within the response body."
         409:
-          description: "Provided AvaL transaction ID is already in use."
+          description: "Provided AvaL Transaction ID is already in use."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
   /avalmatchings/{avalId}/avaltransactions/{transactionId}:
     patch:
       tags:
         - "AvaL Transactions"
-      summary: "Update an existing AvaL transaction"
+      summary: "Update an existing AvaL Transaction"
       description: ""
       operationId: "updateAvalTransaction"
       consumes:
@@ -201,19 +230,19 @@ paths:
       parameters:
         - name: "avalId"
           in: "path"
-          description: "ID of AvaL matching which owns the transaction"
+          description: "ID of AvaL Matching which owns the AvaL Transaction"
           required: true
           type: "string"
           format: "uuid"
         - name: "transactionId"
           in: "path"
-          description: "ID of AvaL transaction which should be updated"
+          description: "ID of AvaL Transaction which should be updated"
           required: true
           type: "string"
           format: "uuid"
         - in: "body"
           name: "body"
-          description: "AvaL transaction which should be updated."
+          description: "AvaL Transaction which should be updated."
           required: true
           schema:
             $ref: "#/definitions/AvalTransaction"
@@ -223,7 +252,7 @@ paths:
         400:
           description: "Invalid state (wrong number), missing attributes or something else."
         404:
-          description: "AvaL transaction not found."
+          description: "AvaL Transaction not found."
         405:
           description: "Validation exception because of incorrect state transition."
         500:
@@ -232,7 +261,7 @@ paths:
     post:
       tags:
         - "AvaL Documents"
-      summary: "Add a document to an existing AvaL transaction"
+      summary: "Add a document to an existing AvaL Transaction"
       description: "See https://tools.ietf.org/html/rfc7578 for further information about the multipart content type."
       operationId: "postAvalDocument"
       consumes:
@@ -240,13 +269,13 @@ paths:
       parameters:
         - name: "avalId"
           in: "path"
-          description: "ID of AvaL matching which owns the transaction"
+          description: "ID of AvaL Matching which owns the AvaL Transaction"
           required: true
           type: "string"
           format: "uuid"
         - name: "transactionId"
           in: "path"
-          description: "ID of AvaL transaction which should be updated"
+          description: "ID of AvaL Transaction which should be updated"
           required: true
           type: "string"
           format: "uuid"
@@ -273,16 +302,16 @@ paths:
         200:
           description: "Document successfully uploaded."
         400:
-          description: "The provided AvaL document does not fulfill the specifications. Details may be included within the response body."
+          description: "The provided AvaL Document does not fulfill the specifications. Details may be included within the response body."
         409:
-          description: "Provided AvaL document ID is already in use."
+          description: "Provided AvaL Document ID is already in use."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
   /info:
     get:
       tags:
         - "AvaL API information"
-      summary: "Provides information about this API"
+      summary: "Provides information about this specific API implementation"
       operationId: "getInfo"
       consumes:
         - application/json
@@ -309,7 +338,6 @@ definitions:
         type: "integer"
         format: "int32"
         example: 1
-        ## TODO one of
       client:
         $ref: "#/definitions/Client"
       supplier:
@@ -638,9 +666,13 @@ definitions:
       level:
         type: "string"
         enum: [ basic, comfort, extended ]
+        description: |
+          The level defines the supported AvaL function level (German: AvaL Standard Stufe) as defined
+          at [www.avalstandard.de](https://www.avalstandard.de/services/auftrags-leistungsdaten)
         example: "basic"
       apiVersion:
         type: "string"
+        description: "This attribute contains the version of your API. This may be useful for monitoring or debugging purpose."
         example: "21.2.4"
 externalDocs:
   description: "Find out more about Swagger"
