@@ -371,10 +371,18 @@ definitions:
         example: "S"
       cycleInformation:
         type: "boolean"
+        description: |
+          Indicates if this specific matching is bound to a cycle. If it is (=true), please use the attribute _cycleRythm_
+          for details on how often the job should be done.
         example: true
       cycleRhythm:
         type: "string"
-        example: "14-täglich"
+        description: |
+          Describes the cycle for this AvaL Matching. Use free-text or free-text in combination with a AvaL reference list ID
+          from here https://www.avalstandard.de/aval-stammdaten-webapi/catalog/AZ.1/entries. Please use the following
+          pattern if referencing to the AvaL list: _freetext#avalid_. Be aware that the handling of the ID is always optional.
+          There is no garantuee that it will be handled by the API.
+        example: "'Jede 2. Woche' or 'Jede 2. Woche#AZ.20.2.2.1'"
   Supplier:
     type: "object"
     properties:
@@ -401,10 +409,18 @@ definitions:
         example: "S"
       cycleInformation:
         type: "boolean"
+        description: |
+          Indicates if this specific matching is bound to a cycle. If it is (=true), please use the attribute _cycleRythm_
+          for details on how often the job should be done.
         example: true
       cycleRhythm:
         type: "string"
-        example: "14 täglich"
+        description: |
+          Describes the cycle for this AvaL Matching. Use free-text or free-text in combination with a AvaL reference list ID
+          from here https://www.avalstandard.de/aval-stammdaten-webapi/catalog/AZ.1/entries. Please use the following
+          pattern if referencing to the AvaL list: _freetext#avalid_. Be aware that the handling of the ID is always optional.
+          There is no garantuee that it will be handled by the API.
+        example: "'Jede 2. Woche' or 'Jede 2. Woche#AZ.20.2.2.1'"
   Aval2Matching:
     type: "object"
     required:
