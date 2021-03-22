@@ -686,7 +686,7 @@ definitions:
           The level defines the supported AvaL function level (German: AvaL Standard Stufe) as defined
           at [www.avalstandard.de](https://www.avalstandard.de/services/auftrags-leistungsdaten)
         example: "basic"
-      apiVersion:
+      vendorVersion:
         type: "string"
         description: "This attribute contains the version of your API. This may be useful for monitoring or debugging purpose."
         example: "21.2.4"
