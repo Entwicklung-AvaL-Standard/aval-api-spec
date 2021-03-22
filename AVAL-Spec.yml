@@ -110,7 +110,7 @@ paths:
   /aval2matchings:
     post:
       tags:
-        - "AvaL Matchings"
+        - "AvaL 2 Matchings"
       summary: "Create a new AvaL 2 Matching"
       description: |
         For creating a new aval-matching beside for the required paramters according to Aval2Matching it is required to provide the following fields:
@@ -149,7 +149,7 @@ paths:
   /aval2matchings/{avalId}:
     patch:
       tags:
-        - "AvaL2Matchings"
+        - "AvaL 2 Matchings"
       summary: "Update an existing AvaL 2 Matching"
       description: ""
       operationId: "updateAval2Matching"
