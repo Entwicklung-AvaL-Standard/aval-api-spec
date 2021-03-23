@@ -684,7 +684,10 @@ definitions:
         enum: [ basic, comfort, extended ]
         description: |
           The level defines the supported AvaL function level (German: AvaL Standard Stufe) as defined
-          at [www.avalstandard.de](https://www.avalstandard.de/services/auftrags-leistungsdaten)
+          at [www.avalstandard.de](https://www.avalstandard.de/services/auftrags-leistungsdaten).
+          - _basic_: Report the provisioning of services for existing orders. Use the 'AvalMatching' while supporting the level 'basic'.
+          - _comfort_: Functionality as in 'basic' with additional use of master data catalogs for the identification of containers, wastes, etc. Use the 'Aval2Matching' type if your API supports the level 'comfort'.
+          - _extended_: Functionality as in 'comfort' with additional use of partner management including authentication.
         example: "basic"
       vendorVersion:
         type: "string"
