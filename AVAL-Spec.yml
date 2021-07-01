@@ -565,7 +565,7 @@ definitions:
         minimum: -90
         maximum: 90
         description: "Geo-Cordinate for latitude in WGS84 reference system in decimal degree (DDD.DDDDD°)"
-      GovernmentNumber:
+      governmentNumber:
         type: "string"
         description: "In Germany: EANV"
       referenceSource:
