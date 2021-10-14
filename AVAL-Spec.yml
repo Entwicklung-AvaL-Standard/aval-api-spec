@@ -528,7 +528,7 @@ definitions:
     required:
       - name
       - street
-      - plz
+      - postalCode
       - city
       - country
       - referenceSource
@@ -540,7 +540,7 @@ definitions:
       street:
         type: "string"
         example: "Stollwerckstr. 9"
-      plz:
+      postalCode:
         type: "string"
         example: "50996"
       city:
