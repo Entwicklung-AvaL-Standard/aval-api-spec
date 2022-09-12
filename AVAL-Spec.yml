@@ -255,6 +255,8 @@ paths:
           description: "AvaL Transaction not found."
         405:
           description: "Validation exception because of incorrect state transition."
+        422:
+          description: "The provided transaction is valid in content, but was rejected by the receiving API. One of the reasons for this may be that the underlying ERP system has refused to execute or continue the transaction."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
   /avalmatchings/{avalId}/avaltransactions/{transactionId}/avaldocuments:
