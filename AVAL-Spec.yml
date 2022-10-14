@@ -591,8 +591,9 @@ definitions:
         type: "integer"
         format: "int32"
         maximum: 10
-        minimum: 1
+        minimum: -1
         example: 1
+        description: "Use the defined states (1 to 10) as specified in the technical documentation. Please be aware of that there is no state with value “0”. It is allowed to use “-1” as an indicator state to abort the synchronization process at any time."
       avalId:
         type: "string"
         format: "uuid"
