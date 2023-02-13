@@ -146,7 +146,7 @@ paths:
         - "AvaL 2 Matchings"
       summary: "Create a new AvaL 2 Matching"
       description: |
-        For creating a new aval-matching beside for the required paramters according to Aval2Matching it is required to provide the following fields:
+        For creating a new aval-matching beside for the required parameters according to Aval2Matching it is required to provide the following fields:
         * taskSite
         * groupId
         * period
