@@ -120,6 +120,7 @@ paths:
         * service
         * cycleInterval
         * serviceUom
+        * requiredDeviationDocuments
         * requiredDocuments
         * needServiceResponse
         * needPurchaseOrder
@@ -494,6 +495,12 @@ definitions:
         items:
           type: "integer"
           format: "int32"
+      requiredDeviationDocuments:
+        type: "array"
+        description: "document types as Defined in AvalDocuments/fileType"
+        example: [ "AD.1.1.101", "AD.1.9.901"]
+        items:
+          type: "string"
       gracePeriod:
         type: "integer"
         example: "5"
