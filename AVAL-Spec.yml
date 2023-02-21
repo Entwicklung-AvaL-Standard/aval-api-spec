@@ -491,13 +491,13 @@ definitions:
         $ref: "#/definitions/Period"
       requiredDocuments:
         type: "array"
-        description: "document types as Defined in AvalDocuments/fileType"
+        description: "document types as Defined in AvalDocuments/fileType; those documents must be made available before the transaction state goes to 9"
         items:
           type: "integer"
           format: "int32"
       requiredDeviationDocuments:
         type: "array"
-        description: "document types as Defined in AvalDocuments/fileType"
+        description: "document types as Defined in AvalDocuments/fileType; those documents must be made available before the transaction state goes to 10"
         example: [ "AD.1.1.101", "AD.1.9.901"]
         items:
           type: "string"
