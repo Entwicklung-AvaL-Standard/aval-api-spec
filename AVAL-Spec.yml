@@ -491,9 +491,9 @@ definitions:
       requiredDocuments:
         type: "array"
         description: "document types as Defined in AvalDocuments/fileType"
+        example: [ "AD.1.1.101", "AD.1.9.901"]
         items:
-          type: "integer"
-          format: "int32"
+          type: "string"
       gracePeriod:
         type: "integer"
         example: "5"
