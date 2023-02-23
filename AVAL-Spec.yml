@@ -492,9 +492,9 @@ definitions:
       requiredDocuments:
         type: "array"
         description: "document types as defined in AvalDocuments/documentType; those documents must be made available before the transaction state goes to 9"
+        example: [ "AD.1.1.101", "AD.1.9.901"]
         items:
-          type: "integer"
-          format: "int32"
+          type: "string"          
       requiredDeviationDocuments:
         type: "array"
         description: "document types as defined in AvalDocuments/documentType; those documents must be made available before the transaction state goes to 10"
