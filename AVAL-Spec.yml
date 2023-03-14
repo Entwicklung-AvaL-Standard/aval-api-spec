@@ -107,13 +107,46 @@ paths:
           description: "Validation exception because of incorrect state transition."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
+  /avalmatchings/{avalId}/extendedInformation:
+    post:
+      tags:
+        - "AvaL Matchings"
+      summary: "Update an existing AvaL Matching with new Extended Information."
+      description: ""
+      operationId: "postAvalMatchingExtendedInformation"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL Matching to which the Extended Information should be assigned."
+          required: true
+          type: "string"
+          format: "uuid"
+        - in: "body"
+          name: "body"
+          description: "Extended Information in the form of an AdditionalContent object."
+          required: true
+          schema:
+            $ref: "#/definitions/AdditionalContent"
+      responses:
+        200:
+          description: "Successful operation."
+        400:
+          description: "Provided Extended Information does not fulfill the specifications. Required parameters missing or invalid. Details may be included within the response body."
+        404:
+          description: "AvaL Matching not found."
+        500:
+          description: "An unexpected error occurred. Details may be included within the response body."
   /aval2matchings:
     post:
       tags:
         - "AvaL 2 Matchings"
       summary: "Create a new AvaL 2 Matching"
       description: |
-        For creating a new aval-matching beside for the required paramters according to Aval2Matching it is required to provide the following fields:
+        For creating a new aval-matching beside for the required parameters according to Aval2Matching it is required to provide the following fields:
         * taskSite
         * groupId
         * period
@@ -184,6 +217,39 @@ paths:
           description: "An unexpected error occurred. Details may be included within the response body."
         501:
           description: "The processing of 'AvaL2Matching' entities is optional and not yet implemented for this API."
+  /aval2matchings/{avalId}/extendedInformation:
+    post:
+      tags:
+        - "AvaL 2 Matchings"
+      summary: "Update an existing AvaL 2 Matching with new Extended Information."
+      description: ""
+      operationId: "postAval2MatchingExtendedInformation"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL 2 Matching to which the Extended Information should be assigned."
+          required: true
+          type: "string"
+          format: "uuid"
+        - in: "body"
+          name: "body"
+          description: "Extended Information in the form of an AdditionalContent object."
+          required: true
+          schema:
+            $ref: "#/definitions/AdditionalContent"
+      responses:
+        200:
+          description: "Successful operation."
+        400:
+          description: "Provided Extended Information does not fulfill the specifications. Required parameters missing or invalid. Details may be included within the response body."
+        404:
+          description: "AvaL 2 Matching not found."
+        500:
+          description: "An unexpected error occurred. Details may be included within the response body."
   /avalmatchings/{avalId}/avaltransactions:
     post:
       tags:
@@ -308,6 +374,39 @@ paths:
           description: "The provided AvaL Document does not fulfill the specifications. Details may be included within the response body."
         409:
           description: "Provided AvaL Document ID is already in use."
+        500:
+          description: "An unexpected error occurred. Details may be included within the response body."
+  /avalmatchings/{avalId}/avaltransactions/{transactionId}/extendedInformation:
+    post:
+      tags:
+        - "AvaL Transactions"
+      summary: "Update an existing AvaL Transaction with new Extended Information."
+      description: ""
+      operationId: "postAvalTransactionExtendedInformation"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL Transaction to which the Extended Information should be assigned."
+          required: true
+          type: "string"
+          format: "uuid"
+        - in: "body"
+          name: "body"
+          description: "Extended Information in the form of an AdditionalContent object."
+          required: true
+          schema:
+            $ref: "#/definitions/AdditionalContent"
+      responses:
+        200:
+          description: "Successful operation."
+        400:
+          description: "Provided Extended Information does not fulfill the specifications. Required parameters missing or invalid. Details may be included within the response body."
+        404:
+          description: "AvaL Transaction not found."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
   /info:
