@@ -398,6 +398,12 @@ paths:
           required: true
           type: "string"
           format: "uuid"
+        - name: "transactionId"
+          in: "path"
+          description: "ID of AvaL Transaction which should be updated"
+          required: true
+          type: "string"
+          format: "uuid"
         - in: "body"
           name: "body"
           description: "Extended Information in the form of an AdditionalContent object."
@@ -599,7 +605,7 @@ definitions:
         description: "document types as defined in AvalDocuments/documentType; those documents must be made available before the transaction state goes to 9"
         example: [ "AD.1.1.101", "AD.1.9.901"]
         items:
-          type: "string"          
+          type: "string"
       requiredDeviationDocuments:
         type: "array"
         description: "document types as defined in AvalDocuments/documentType; those documents must be made available before the transaction state goes to 10"
