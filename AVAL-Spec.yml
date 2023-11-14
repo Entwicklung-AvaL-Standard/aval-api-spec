@@ -28,7 +28,7 @@ info:
     * [Contact form](https://www.avalstandard.de/kontaktformular)
     * [Contact persons](https://www.avalstandard.de/kontakt/ansprechpartner)
 
-  version: "1.0.1"
+  version: "1.0.2"
   title: "AvaL API specification"
   termsOfService: "https://www.avalstandard.de/impressum"
   contact:
@@ -744,8 +744,10 @@ definitions:
         type: "string"
         example: "WS-0815"
       governmentalAssetNumber:
+        description: "The governmental asset number, in german 'Behördliche Anlagennummer', is a crucial part of the german 'Entsorgungsnachweis' process. Use this attribute while exchanging or documenting critical or dangerous waste using AvaL."
         type: "string"
       governmentalCarrierNumber:
+        description: "The governmental carrier number, in german 'Behördliche Beförderernummer', is a crucial part of the german 'Entsorgungsnachweis' process. Use this attribute while exchanging or documenting critical or dangerous waste using AvaL."
         type: "string"
       orderNumberSupplier:
         type: "string"
@@ -766,9 +768,11 @@ definitions:
       variationNotes:
         type: "string"
       alternateAvalId:
+        description: "This attribute is currently not used. It may be removed in one of the next versions."
         type: "string"
         format: "uuid"
       alternateMatchedAvalId:
+        description: "Use this attribute if you want to signal to the client in the response (AvaL state 10 only) that there is a better matching for this transaction. For example, the emptying of a container with mixed scrap was agreed upon during matching. However, steel scrap was actually disposed of and a valid matching already exists for this. This is exactly what you pass as “alternateMatchedAvalId”."
         type: "string"
         format: "uuid"
       extendedInformation:
