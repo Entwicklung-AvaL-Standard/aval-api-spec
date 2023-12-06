@@ -28,7 +28,7 @@ info:
     * [Contact form](https://www.avalstandard.de/kontaktformular)
     * [Contact persons](https://www.avalstandard.de/kontakt/ansprechpartner)
 
-  version: "1.0.2"
+  version: "1.1.0"
   title: "AvaL API specification"
   termsOfService: "https://www.avalstandard.de/impressum"
   contact:
@@ -44,6 +44,28 @@ tags:
       url: "https://www.avalstandard.de/"
 schemes:
   - "https"
+securityDefinitions:
+  OAuth2:
+    type: oauth2
+    description: |
+      The OAuth2 procedure is mandatory to secure an AvaL API. The use of the central AvaL OAuth2 Server (ZSAvaL) is not mandatory. 
+      You can also use established SaaS solutions (e.g. Azure AD, AWS Incognito, etc.) or on-premise solutions like Keycloak.
+            
+      A detailed description of the use of OAuth2 within AvaL is described here: [AvaL Standard 4.3 Webservice und Serverdienste Partnerverzeichnis und Authentifizierung](https://www.avalstandard.de/files/content/downloads/teil4-webservices-objekte-funktionen/AvaL%20Standard%20Teil%204.3%20Webservice%20und%20Serverdienste%20Partnerverzeichnis%20und%20Authentifizierung%202022-03-09.pdf) (currently only available in German)
+            
+      The token type used is JWT tokens (see jwt.io and RFC7519).
+      - The validity of the tokens is 5 minutes
+      - No refresh tokens are offered/used
+      - The grant type “urn:ietf:params:oauth:grant-type:uma-ticket” including the “audience” claim is to be used. The “audience” claim is one known to the central server Recipient identification entered.
+      - Additional parameters such as “scope” are not supported.
+            
+      For further and detailed information on how to connect your API client to the OAuth2 server and communicate with it, please also take a look at the following project: [oauth2-samples](https://github.com/entwicklung-AvaL-Standard/oauth2-samples) 
+      repository.
+            
+      If you are use your own OAuth2 server (on-premise or SaaS), then you have to specify the ***Authorization URL*** and ***Token URL*** accordingly.
+    flow: accessCode
+    authorizationUrl: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/auth"
+    tokenUrl: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/token"
 paths:
   /avalmatchings:
     post:
