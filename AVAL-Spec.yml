@@ -65,7 +65,7 @@ securityDefinitions:
       If you are use your own OIDC / OAuth2 server (on-premise or SaaS), then you have to specify the ***Authorization URL*** and ***Token URL*** accordingly.
       In this case, you and your partner must also discuss different grant types. The grant type ***client_credentials*** is often used in the bi-directionally coordinated OIDC / OAuth2 procedure.
       The same applies to the use of ***claims*** that differs from the standard described here.
-    flow: accessCode
+    flow: application
     authorizationUrl: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/auth"
     tokenUrl: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/token"
 paths:
