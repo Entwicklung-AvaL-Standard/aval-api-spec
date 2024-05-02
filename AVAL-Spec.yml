@@ -28,7 +28,7 @@ info:
     * [Contact form](https://www.avalstandard.de/kontaktformular)
     * [Contact persons](https://www.avalstandard.de/kontakt/ansprechpartner)
 
-  version: "1.0.2"
+  version: "1.1.0"
   title: "AvaL API specification"
   termsOfService: "https://www.avalstandard.de/impressum"
   contact:
@@ -582,6 +582,10 @@ definitions:
         type: "string"
         example: "AS.1.91.150106.0.0"
         description: "AvaL-ID of the material"
+      avv:
+        type: string
+        example: "150106"
+        description: "The in Germany well-known and commonly used key number from the “Abfallverzeichnis-Verordnung” (AVV for short)."
       materialUom:
         type: "string"
         example: "AE.1.103"
