@@ -28,7 +28,7 @@ info:
     * [Contact form](https://www.avalstandard.de/kontaktformular)
     * [Contact persons](https://www.avalstandard.de/kontakt/ansprechpartner)
 
-  version: "1.1.0"
+  version: "1.2.0"
   title: "AvaL API specification"
   termsOfService: "https://www.avalstandard.de/impressum"
   contact:
@@ -582,10 +582,12 @@ definitions:
         type: "string"
         example: "AS.1.91.150106.0.0"
         description: "AvaL-ID of the material"
-      avv:
+      ewc:
         type: string
         example: "150106"
-        description: "The in Germany well-known and commonly used key number from the “Abfallverzeichnis-Verordnung” (AVV for short)."
+        description: | 
+          "EWC" stands for the European Waste Catalogue, which categorizes waste using a 6-digit key number. In Germany,
+          this European standard is implemented through the “Abfallverzeichnis-Verordnung” (AVV for short).
       materialUom:
         type: "string"
         example: "AE.1.103"
