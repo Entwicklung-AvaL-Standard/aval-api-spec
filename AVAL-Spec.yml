@@ -608,6 +608,12 @@ definitions:
         type: "string"
         example: "AS.1.91.150106.0.0"
         description: "AvaL-ID of the material"
+      ewc:
+        type: string
+        example: "150106"
+        description: | 
+          "EWC" stands for the European Waste Catalogue, which categorizes waste using a 6-digit key number. In Germany,
+          this European standard is implemented through the “Abfallverzeichnis-Verordnung” (AVV for short).
       materialUom:
         type: "string"
         example: "AE.1.103"
