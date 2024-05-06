@@ -28,7 +28,7 @@ info:
     * [Contact form](https://www.avalstandard.de/kontaktformular)
     * [Contact persons](https://www.avalstandard.de/kontakt/ansprechpartner)
 
-  version: "1.2.0"
+  version: "1.3.0"
   title: "AvaL API specification"
   termsOfService: "https://www.avalstandard.de/impressum"
   contact:
@@ -56,17 +56,19 @@ securityDefinitions:
       The token type used is JWT tokens (see jwt.io and RFC7519).
       - The validity of the tokens is 5 minutes
       - No refresh tokens are offered/used
-      - The grant type “urn:ietf:params:oauth:grant-type:uma-ticket” including the “audience” claim is to be used. The “audience” claim is one known to the central server Recipient identification entered.
+      - The grant type “urn:ietf:params:oauth:grant-type:uma-ticket” including the “audience” claim is to be used. The “audience” claim is one known to the central server recipient identification entered.
       - Additional parameters such as “scope” are not supported.
+      - Authorization URL: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/auth"
+      - Token URL: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/token"
             
       For further and detailed information on how to connect your API client to the OIDC / OAuth2 server and communicate with it, please also take a look at the following project: [oauth2-samples](https://github.com/entwicklung-AvaL-Standard/oauth2-samples) 
-      repository.
-            
+      repository. And also take a look into (RFC6749)[https://datatracker.ietf.org/doc/html/rfc6749], especially section 4.4 and 4.5.
+      
+      ***Bidirectional agreed configuration:***
       If you are use your own OIDC / OAuth2 server (on-premise or SaaS), then you have to specify the ***Authorization URL*** and ***Token URL*** accordingly.
-      In this case, you and your partner must also discuss different grant types. The grant type ***client_credentials*** is often used in the bi-directionally coordinated OIDC / OAuth2 procedure.
+      In this case, you and your partner must also discuss different flows and grant types. As an example the grant type ***client_credentials*** is often used in the bi-directionally coordinated OIDC / OAuth2 procedure.
       The same applies to the use of ***claims*** that differs from the standard described here.
     flow: application
-    authorizationUrl: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/auth"
     tokenUrl: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/token"
 paths:
   /avalmatchings:
