@@ -64,10 +64,9 @@ securityDefinitions:
       For further and detailed information on how to connect your API client to the OIDC / OAuth2 server and communicate with it, please also take a look at the following project: [oauth2-samples](https://github.com/entwicklung-AvaL-Standard/oauth2-samples) 
       repository. And also take a look into (RFC6749)[https://datatracker.ietf.org/doc/html/rfc6749], especially section 4.4 and 4.5.
       
-      ***Bidirectional agreed configuration:***
+      ***Alternative configuration:***
       If you are use your own OIDC / OAuth2 server (on-premise or SaaS), then you have to specify the ***Authorization URL*** and ***Token URL*** accordingly.
-      In this case, you and your partner must also discuss different flows and grant types. As an example the grant type ***client_credentials*** is often used in the bi-directionally coordinated OIDC / OAuth2 procedure.
-      The same applies to the use of ***claims*** that differs from the standard described here.
+      In this case, you and your partner must agree on the alternative grand type ***client_credentials****. All other parameters and claims, especially the "audience" claim, must match the JWT token definition above.
     flow: application
     tokenUrl: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/token"
 paths:
