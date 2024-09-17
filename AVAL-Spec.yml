@@ -50,9 +50,9 @@ securityDefinitions:
     description: |
       The OpenID Connect/OIDC procedure (based on OAuth2) is mandatory to provide authentication to an AvaL API. The use of the central AvaL OAuth2 Server (ZSAvaL) is not mandatory. 
       You can also use established OIDC-SaaS solutions (e.g. Azure AD, AWS Cognito, etc.) or on-premise solutions like Keycloak.
-            
+      
       A detailed description of the use of OIDC and OAuth2 within AvaL is described here: [AvaL Standard 4.3 Webservice und Serverdienste Partnerverzeichnis und Authentifizierung](https://www.avalstandard.de/files/content/downloads/teil4-webservices-objekte-funktionen/AvaL%20Standard%20Teil%204.3%20Webservice%20und%20Serverdienste%20Partnerverzeichnis%20und%20Authentifizierung%202022-03-09.pdf) (currently only available in German)
-            
+      
       The token type used is JWT tokens (see jwt.io and RFC7519).
       - The validity of the tokens is 5 minutes
       - No refresh tokens are offered/used
@@ -60,7 +60,7 @@ securityDefinitions:
       - Additional parameters such as “scope” are not supported.
       - Authorization URL: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/auth"
       - Token URL: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/token"
-            
+      
       For further and detailed information on how to connect your API client to the OIDC / OAuth2 server and communicate with it, please also take a look at the following project: [oauth2-samples](https://github.com/entwicklung-AvaL-Standard/oauth2-samples) 
       repository. And also take a look into (RFC6749)[https://datatracker.ietf.org/doc/html/rfc6749], especially section 4.4 and 4.5.
       
