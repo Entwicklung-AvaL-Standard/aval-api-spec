@@ -66,7 +66,7 @@ securityDefinitions:
       
       ***Alternative configuration:***
       If you are use your own OIDC / OAuth2 server (on-premise or SaaS), then you have to specify the ***Authorization URL*** and ***Token URL*** accordingly.
-      In this case, you and your partner must agree on the alternative grand type ***client_credentials****. All other parameters and claims, especially the "audience" claim, must match the JWT token definition above.
+      In this case, you can agree with your partner on the alternative grant type ***client_credentials***. All other parameters and specifications, in particular the “audience” specification, must match the JWT token definition above.
     flow: application
     tokenUrl: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/token"
 paths:
