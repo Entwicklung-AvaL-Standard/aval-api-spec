@@ -28,7 +28,7 @@ info:
     * [Contact form](https://www.avalstandard.de/kontaktformular)
     * [Contact persons](https://www.avalstandard.de/kontakt/ansprechpartner)
 
-  version: "1.2.0"
+  version: "1.3.0"
   title: "AvaL API specification"
   termsOfService: "https://www.avalstandard.de/impressum"
   contact:
@@ -44,6 +44,31 @@ tags:
       url: "https://www.avalstandard.de/"
 schemes:
   - "https"
+securityDefinitions:
+  OAuth2:
+    type: oauth2
+    description: |
+      The OpenID Connect/OIDC procedure (based on OAuth2) is mandatory to provide authentication to an AvaL API. The use of the central AvaL OAuth2 Server (ZSAvaL) is not mandatory. 
+      You can also use established OIDC-SaaS solutions (e.g. Azure AD, AWS Cognito, etc.) or on-premise solutions like Keycloak.
+      
+      A detailed description of the use of OIDC and OAuth2 within AvaL is described here: [AvaL Standard 4.3 Webservice und Serverdienste Partnerverzeichnis und Authentifizierung](https://www.avalstandard.de/files/content/downloads/teil4-webservices-objekte-funktionen/AvaL%20Standard%20Teil%204.3%20Webservice%20und%20Serverdienste%20Partnerverzeichnis%20und%20Authentifizierung%202022-03-09.pdf) (currently only available in German)
+      
+      The token type used is JWT tokens (see jwt.io and RFC7519).
+      - The validity of the tokens is 5 minutes
+      - No refresh tokens are offered/used
+      - The grant type “urn:ietf:params:oauth:grant-type:uma-ticket” including the “audience” claim is to be used. The “audience” claim is one known to the central server recipient identification entered.
+      - Additional parameters such as “scope” are not supported.
+      - Authorization URL: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/auth"
+      - Token URL: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/token"
+      
+      For further and detailed information on how to connect your API client to the OIDC / OAuth2 server and communicate with it, please also take a look at the following project: [oauth2-samples](https://github.com/entwicklung-AvaL-Standard/oauth2-samples) 
+      repository. And also take a look into (RFC6749)[https://datatracker.ietf.org/doc/html/rfc6749], especially section 4.4 and 4.5.
+      
+      ***Alternative configuration:***
+      If you are use your own OIDC / OAuth2 server (on-premise or SaaS), then you have to specify the ***Authorization URL*** and ***Token URL*** accordingly.
+      In this case, you can agree with your partner on the alternative grant type ***client_credentials***. All other parameters and specifications, in particular the “audience” specification, must match the JWT token definition above.
+    flow: application
+    tokenUrl: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/token"
 paths:
   /avalmatchings:
     post:
