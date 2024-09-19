@@ -613,6 +613,10 @@ definitions:
         description: | 
           "EWC" stands for the European Waste Catalogue, which categorizes waste using a 6-digit key number. In Germany,
           this European standard is implemented through the “Abfallverzeichnis-Verordnung” (AVV for short).
+      localEwc:
+        type: string
+        description: |
+          Use this attribute to specify a country-specific EWC description or number.
       materialUom:
         type: "string"
         example: "AE.1.103"
