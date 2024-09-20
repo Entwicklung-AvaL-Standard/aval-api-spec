@@ -615,8 +615,11 @@ definitions:
           this European standard is implemented through the “Abfallverzeichnis-Verordnung” (AVV for short).
       localEwc:
         type: string
+        example: "DE-170203"
         description: |
-          Use this attribute to specify a country-specific EWC description or number.
+          Use this attribute to specify a country-specific EWC description or number. To identify the country to which 
+          the localEwc belongs, it must be prefixed with the ISO-3166-1 alpha-2 country code (DE, FR, ..) 
+          followed by a hyphen.
       materialUom:
         type: "string"
         example: "AE.1.103"
