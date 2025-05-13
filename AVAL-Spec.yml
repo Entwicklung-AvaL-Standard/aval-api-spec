@@ -16,9 +16,9 @@ info:
     via so-called AvaL Transactions (see definiton _AvalTransaction_), regardless of their matching type.
 
     API levels:
-    * basic: The API supports handling of the AvaL Matching type
-    * comfort: The API supports handling of __both__ AvaL Matching types
-    * extended: _to be defined_
+    * _basic_: Report the provisioning of services for existing orders. Use the 'AvalMatching' while supporting the level 'basic'.
+    * _comfort_: Functionality as in 'basic' with additional use of master data catalogs for the identification of containers, wastes, etc. Use the 'Aval2Matching' type if your API supports the level 'comfort'.
+    * _extended_: Functionality as in 'comfort' with additional use of partner management including authentication.
 
     Further information:
     * [AvaL Documents](https://www.avalstandard.de/download/dokumente) (written in German language)
