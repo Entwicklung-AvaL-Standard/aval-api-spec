@@ -28,7 +28,7 @@ info:
     * [Contact form](https://www.avalstandard.de/kontaktformular)
     * [Contact persons](https://www.avalstandard.de/kontakt/ansprechpartner)
 
-  version: "1.4.0"
+  version: "1.5.0"
   title: "AvaL API specification"
   termsOfService: "https://www.avalstandard.de/impressum"
   contact:
@@ -396,6 +396,42 @@ paths:
           name: "file"
           type: "file"
           required: true
+        - in: "formData"
+          name: "documentNumber"
+          type: "string"
+          description: "A reference number for this document, which enables both AvaL partners to identify the document."
+          required: false
+        - in: "formData"
+          name: "metadata"
+          type: "string"
+          description: | 
+            A key-value structure of type AdditionalContent for transmitting metadata to be passed on to connected systems. 
+            An example of this is a document management system (DMS), which can use the metadata for keywording and indexing.
+
+            Due to an OpenAPI 2.0 limitation, the value must be defined and passed as a string. The actual structure must 
+            correspond to the JSON representation of the extended information and must be capable of being transformed 
+            to the type '#/definitions/AdditionalContent'. The implementation is responsible for the transformation.  
+            
+            ---
+            
+            Example: 
+            ```json
+              {
+                "contractNumberSupplier": {
+                  "type": "String",
+                  "content": "LO-796632787"
+                },
+                "containerNumber": {
+                  "type": "Integer",
+                  "content": "4457893082"
+                },
+                "contractNumberClient": {
+                  "type": "String",
+                  "content": "NE-BR-487953Z"
+                }
+              }            
+            ```
+          required: false
       responses:
         200:
           description: "Document successfully uploaded."
