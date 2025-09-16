@@ -1,0 +1,881 @@
+openapi: "3.1.0"
+info:
+  description: |
+    AvaL specification file.
+
+    This specification contains descriptions for all AvaL related API operations.
+    Furthermore any API implementer has to provide all of the mandatory functions of this spec file. Optional
+    operations are indicated by HTTP response code 501. Optional attribute are not listed within the tag named
+    'required'.
+
+    The spec contains two types of AvaL matchings.
+    * AvaL Matching (see definition _AvalMatching_) without contract information
+    * AvaL __2__ Matching (see definition _Aval2Matching_) with contract information
+
+    Your API must support at least AvaL Matchings, supporting AvaL 2 Matching is optional. All orders are processed
+    via so-called AvaL Transactions (see definiton _AvalTransaction_), regardless of their matching type.
+
+    API levels:
+    * _basic_: Report the provisioning of services for existing orders. Use the 'AvalMatching' while supporting the level 'basic'.
+    * _comfort_: Functionality as in 'basic' with additional use of master data catalogs for the identification of containers, wastes, etc. Use the 'Aval2Matching' type if your API supports the level 'comfort'.
+    * _extended_: Functionality as in 'comfort' with additional use of partner management including authentication.
+
+    Further information:
+    * [AvaL Documents](https://www.avalstandard.de/download/dokumente) (written in German language)
+    * [AvaL Organization on Github](https://github.com/Entwicklung-AvaL-Standard)
+
+    Contact:
+    * [Contact form](https://www.avalstandard.de/kontaktformular)
+    * [Contact persons](https://www.avalstandard.de/kontakt/ansprechpartner)
+
+  version: "1.5.0"
+  title: "AvaL API specification"
+  termsOfService: "https://www.avalstandard.de/impressum"
+  contact:
+    email: "entwicklung@avalstandard.de"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: "AvaL API"
+    description: "AvaL API"
+    externalDocs:
+      description: "Find out more about AvaL"
+      url: "https://www.avalstandard.de/"
+servers:
+  - url: "https://api.example.com"
+    description: "Production server"
+security:
+  - OAuth2: []
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      description: |
+        The OpenID Connect/OIDC procedure (based on OAuth2) is mandatory to provide authentication to an AvaL API. The use of the central AvaL OAuth2 Server (ZSAvaL) is not mandatory. 
+        You can also use established OIDC-SaaS solutions (e.g. Azure AD, AWS Cognito, etc.) or on-premise solutions like Keycloak.
+
+        A detailed description of the use of OIDC and OAuth2 within AvaL is described here: [AvaL Standard 4.3 Webservice und Serverdienste Partnerverzeichnis und Authentifizierung](https://www.avalstandard.de/files/content/downloads/teil4-webservices-objekte-funktionen/AvaL%20Standard%20Teil%204.3%20Webservice%20und%20Serverdienste%20Partnerverzeichnis%20und%20Authentifizierung%202022-03-09.pdf) (currently only available in German)
+
+        The token type used is JWT tokens (see jwt.io and RFC7519).
+        - The validity of the tokens is 5 minutes
+        - No refresh tokens are offered/used
+        - The grant type "urn:ietf:params:oauth:grant-type:uma-ticket" including the "audience" claim is to be used. The "audience" claim is one known to the central server recipient identification entered.
+        - Additional parameters such as "scope" are not supported.
+        - Authorization URL: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/auth"
+        - Token URL: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/token"
+
+        For further and detailed information on how to connect your API client to the OIDC / OAuth2 server and communicate with it, please also take a look at the following project: [oauth2-samples](https://github.com/entwicklung-AvaL-Standard/oauth2-samples) 
+        repository. And also take a look into (RFC6749)[https://datatracker.ietf.org/doc/html/rfc6749], especially section 4.4 and 4.5.
+
+        ***Alternative configuration:***
+        If you are use your own OIDC / OAuth2 server (on-premise or SaaS), then you have to specify the ***Authorization URL*** and ***Token URL*** accordingly.
+        In this case, you can agree with your partner on the alternative grant type ***client_credentials***. All other parameters and specifications, in particular the "audience" specification, must match the JWT token definition above.
+      flows:
+        clientCredentials:
+          tokenUrl: "https://auth.avalstandard.de/auth/realms/avalstandard/protocol/openid-connect/token"
+          scopes: {}
+  schemas:
+    AvalMatching:
+      type: "object"
+      required:
+        - id
+        - state
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+        state:
+          type: "integer"
+          format: "int32"
+          example: 1
+        client:
+          $ref: "#/components/schemas/Client"
+        supplier:
+          $ref: "#/components/schemas/Supplier"
+        extendedInformation:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/AdditionalContent"
+    Client:
+      type: object
+      properties:
+        contractPartner:
+          type: "string"
+        material:
+          type: "string"
+          example: "Papier"
+        containerType:
+          type: "string"
+          example: "MGB 1100 cbm"
+        serviceType:
+          type: "string"
+          example: "Austausch"
+        performancePlace:
+          type: "string"
+          example: "Musterstraße 43, 22041 Hamburg"
+        materialUnit:
+          type: "string"
+          example: "to"
+        serviceUnit:
+          type: "string"
+          example: "S"
+        cycleInformation:
+          type: "boolean"
+          description: |
+            Indicates if this specific matching is bound to a cycle. If it is (=true), please use the attribute _cycleRythm_
+            for details on how often the job should be done.
+          example: true
+        cycleRhythm:
+          type: "string"
+          description: |
+            Describes the cycle for this AvaL Matching. Use free-text or free-text in combination with a AvaL reference list ID
+            from here https://www.avalstandard.de/aval-stammdaten-webapi/catalog/AZ.1/entries. Please use the following
+            pattern if referencing to the AvaL list: _freetext#avalid_. Be aware that the handling of the ID is always optional.
+            There is no garantuee that it will be handled by the API.
+          example: "'Jede 2. Woche' or 'Jede 2. Woche#AZ.20.2.2.1'"
+    Supplier:
+      type: "object"
+      properties:
+        contractPartner:
+          type: "string"
+          example: "Mustermann GmbH"
+        material:
+          type: "string"
+          example: "Papier"
+        containerType:
+          type: "string"
+          example: "MGB 1100 cbm"
+        serviceType:
+          type: "string"
+          example: "Austausch"
+        performancePlace:
+          type: "string"
+          example: "Musterstr. 43, D-22041 Hamburg"
+        materialUnit:
+          type: "string"
+          example: "to"
+        serviceUnit:
+          type: "string"
+          example: "S"
+        cycleInformation:
+          type: "boolean"
+          description: |
+            Indicates if this specific matching is bound to a cycle. If it is (=true), please use the attribute _cycleRythm_
+            for details on how often the job should be done.
+          example: true
+        cycleRhythm:
+          type: "string"
+          description: |
+            Describes the cycle for this AvaL Matching. Use free-text or free-text in combination with a AvaL reference list ID
+            from here https://www.avalstandard.de/aval-stammdaten-webapi/catalog/AZ.1/entries. Please use the following
+            pattern if referencing to the AvaL list: _freetext#avalid_. Be aware that the handling of the ID is always optional.
+            There is no garantuee that it will be handled by the API.
+          example: "'Jede 2. Woche' or 'Jede 2. Woche#AZ.20.2.2.1'"
+    Aval2Matching:
+      type: "object"
+      required:
+        - id
+        - state
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+        state:
+          type: "string"
+          enum: [NEW, ACCEPTED, REJECTED, ENDED]
+          example: "NEW"
+        taskSite:
+          $ref: "#/components/schemas/Site"
+        custSite:
+          $ref: "#/components/schemas/Site"
+        billSite:
+          $ref: "#/components/schemas/Site"
+        disposalSite:
+          $ref: "#/components/schemas/Site"
+        baseContract:
+          type: "string"
+          example: "HORNBACH"
+          description: "As agreed upon in a base contract, may define conditions/prices/..."
+        groupId:
+          type: "string"
+          format: "uuid"
+          description: "allows for grouping of aval-ids,e.g. provisioning, rent, disposal or decomission"
+        period:
+          $ref: "#/components/schemas/Period"
+        service:
+          type: "string"
+          example: "AL.1.13.19.0"
+          description: "AvaL-ID of the service"
+        serviceUom:
+          type: "string"
+          example: "AE.1.400"
+          description: "AvaL-ID of the UOM (example: pieces)"
+        material:
+          type: "string"
+          example: "AS.1.91.150106.0.0"
+          description: "AvaL-ID of the material"
+        ewc:
+          type: string
+          example: "150106"
+          description: |
+            "EWC" stands for the European Waste Catalogue, which categorizes waste using a 6-digit key number. In Germany,
+            this European standard is implemented through the "Abfallverzeichnis-Verordnung" (AVV for short).
+        localEwc:
+          type: string
+          example: "DE-170203"
+          description: |
+            Use this attribute to specify a country-specific EWC description or number. To identify the country to which 
+            the localEwc belongs, it must be prefixed with the ISO-3166-1 alpha-2 country code (DE, FR, ..) 
+            followed by a hyphen.
+        materialUom:
+          type: "string"
+          example: "AE.1.103"
+          description: "AvaL-ID of the UOM (example: tons)"
+        container:
+          type: "string"
+          example: "AB.1.11.2500.0"
+          description: "AvaL-ID of the container"
+        containerAmount:
+          type: "integer"
+          format: "int32"
+          example: 2
+        cycleInterval:
+          type: "string"
+          description: "Only AvaL IDs from https://www.avalstandard.de/aval-stammdaten-webapi/catalog/AZ.1/entries are allowed here."
+          example: "AZ.1.02.0.0.0"
+        cyclePeriod:
+          $ref: "#/components/schemas/Period"
+        requiredDocuments:
+          type: "array"
+          description: "document types as defined in AvalDocuments/documentType; those documents must be made available before the transaction state goes to 9"
+          example: ["AD.1.1.101", "AD.1.9.901"]
+          items:
+            type: "string"
+        requiredDeviationDocuments:
+          type: "array"
+          description: "document types as defined in AvalDocuments/documentType; those documents must be made available before the transaction state goes to 10"
+          example: ["AD.1.1.101", "AD.1.9.901"]
+          items:
+            type: "string"
+        gracePeriod:
+          type: "integer"
+          example: 5
+          description: "time for execution in working days after sending AvalTransaction or number of (working) days before rent payment starts. Can be omitted if there is a baseContract"
+        needServiceResponse:
+          type: "boolean"
+          example: true
+          description: "is sending back a Service Response (Rückmeldung, status=9/10) required?"
+        needPurchaseOrder:
+          type: "boolean"
+          example: true
+          description: "is there a 'Beauftragung' by the AG?"
+        priceReference:
+          type: "string"
+          example: "SERVICE"
+          enum: [SERVICE, MATERIAL, CONTAINER, FLAT]
+        price:
+          type: "number"
+          description: "price in priceCurrency per priceReference"
+        priceCurrency:
+          type: "string"
+          example: "EUR"
+          description: "currency code according to ISO 4217 (3 letter)"
+        logisticComment:
+          type: "string"
+          example: "Wenn Tor verschlossen: 777 anrufen"
+          description: "comment for logistic special-handling"
+        extendedInformation:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/AdditionalContent"
+    Site:
+      type: "object"
+      required:
+        - name
+        - street
+        - postalCode
+        - city
+        - country
+        - referenceSource
+        - siteReference
+      properties:
+        name:
+          type: "string"
+          example: "Mustermann GmbH"
+        street:
+          type: "string"
+          example: "Stollwerckstr. 9"
+        postalCode:
+          type: "string"
+          example: "50996"
+        city:
+          type: "string"
+          example: "Köln"
+        country:
+          type: "string"
+          example: "DE"
+          description: "2 Character ISO Code"
+        siteDescription:
+          type: "string"
+          example: "Tor 2"
+        geoLongitude:
+          type: "number"
+          format: "float"
+          minimum: -180
+          maximum: 180
+          description: "Geo-Cordinate for longitude in WGS84 reference system in decimal degree (DDD.DDDDD°)"
+        geoLatitude:
+          type: "number"
+          format: "float"
+          minimum: -90
+          maximum: 90
+          description: "Geo-Cordinate for latitude in WGS84 reference system in decimal degree (DDD.DDDDD°)"
+        governmentNumber:
+          type: "string"
+          description: "In Germany: EANV"
+        referenceSource:
+          type: "string"
+          enum: [GLN, AVAL, SENDER]
+          example: "SENDER"
+        siteReference:
+          type: "string"
+          example: "244377"
+          description: "reference number according to the referenceSource; if SENDER=internal to the sending system, for the receiver to lookup in a sender-specific lookup table. For AVAL/EANV/GLN to be further detailed"
+    AvalTransaction:
+      type: "object"
+      required:
+        - id
+        - state
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+        state:
+          type: "integer"
+          format: "int32"
+          maximum: 10
+          minimum: -1
+          example: 1
+          description: 'Use the defined states (1 to 10) as specified in the technical documentation. Please be aware of that there is no state with value "0". It is allowed to use "-1" as an indicator state to abort the synchronization process at any time.'
+        avalId:
+          type: "string"
+          format: "uuid"
+        operationPeriod:
+          $ref: "#/components/schemas/Period"
+        fulfillmentTimestamp:
+          type: "string"
+          format: "date-time"
+        plannedFulfillmentPeriod:
+          $ref: "#/components/schemas/Period"
+        serviceAmount:
+          type: "integer"
+          format: "int32"
+          example: 1
+        containerAmount:
+          type: "integer"
+          format: "int32"
+          example: 2
+        materialAmount:
+          type: "number"
+          format: "double"
+          example: 0.256
+        isUnderMeasureThreshold:
+          type: "boolean"
+          example: false
+        serviceNoteNumber:
+          type: "string"
+          example: "DL-4711"
+        measureNoteNumber:
+          type: "string"
+          example: "WS-0815"
+        governmentalAssetNumber:
+          description: "The governmental asset number, in german 'Behördliche Anlagennummer', is a crucial part of the german 'Entsorgungsnachweis' process. Use this attribute while exchanging or documenting critical or dangerous waste using AvaL."
+          type: "string"
+        governmentalCarrierNumber:
+          description: "The governmental carrier number, in german 'Behördliche Beförderernummer', is a crucial part of the german 'Entsorgungsnachweis' process. Use this attribute while exchanging or documenting critical or dangerous waste using AvaL."
+          type: "string"
+        orderNumberSupplier:
+          type: "string"
+          example: "LFS_123456"
+        orderNumberClient:
+          type: "string"
+          example: "ERP_987654"
+        logisticComments:
+          type: "string"
+          example: "Bitte hinter dem Gebäude herum fahren!"
+        cancellationReason:
+          type: "string"
+          example: "Tor verschlossen"
+        complaintReason:
+          type: "string"
+          description: "Only AvaL IDs from https://www.avalstandard.de/aval-stammdaten-webapi/catalog/AV.1/entries are allowed here."
+          example: "AV.1.104"
+        variationNotes:
+          type: "string"
+        alternateAvalId:
+          description: "This attribute is currently not used. It may be removed in one of the next versions."
+          type: "string"
+          format: "uuid"
+        alternateMatchedAvalId:
+          description: 'Use this attribute if you want to signal to the client in the response (AvaL state 10 only) that there is a better matching for this transaction. For example, the emptying of a container with mixed scrap was agreed upon during matching. However, steel scrap was actually disposed of and a valid matching already exists for this. This is exactly what you pass as "alternateMatchedAvalId".'
+          type: "string"
+          format: "uuid"
+        extendedInformation:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/AdditionalContent"
+    Period:
+      type: "object"
+      properties:
+        start:
+          type: "string"
+          format: "date-time"
+          example: "2019-07-01T14:00:00Z"
+        end:
+          type: "string"
+          format: "date-time"
+          example: "2019-07-01T18:00:00Z"
+    AdditionalContent:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+          example: "Behälternummer"
+        content:
+          type: "string"
+          example: "A 123 987 456"
+    ApiInformation:
+      type: "object"
+      required:
+        - level
+      properties:
+        level:
+          type: "string"
+          enum: [basic, comfort, extended]
+          description: |
+            The level defines the supported AvaL function level (German: AvaL Standard Stufe) as defined
+            at [www.avalstandard.de](https://www.avalstandard.de/services/auftrags-leistungsdaten).
+            - _basic_: Report the provisioning of services for existing orders. Use the 'AvalMatching' while supporting the level 'basic'.
+            - _comfort_: Functionality as in 'basic' with additional use of master data catalogs for the identification of containers, wastes, etc. Use the 'Aval2Matching' type if your API supports the level 'comfort'.
+            - _extended_: Functionality as in 'comfort' with additional use of partner management including authentication.
+          example: "basic"
+        version:
+          type: "string"
+          description: "This attribute indicate the official AvaL Standard specification version on the basis of which this API was implemented."
+          example: "1.4.0"
+        vendorVersion:
+          type: "string"
+          description: "This attribute contains the version of your API. This may be useful for monitoring or debugging purpose."
+          example: "21.2.4"
+paths:
+  /avalmatchings:
+    post:
+      tags:
+        - "AvaL Matchings"
+      summary: "Create a new AvaL Matching"
+      description: ""
+      operationId: "createAvalMatching"
+      requestBody:
+        description: "AvaL matching which should be created"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AvalMatching"
+      responses:
+        "200":
+          description: "Successful operation."
+        "400":
+          description: "The provided AvaL Matching does not fulfill the specifications. Required parameters missing or provided AvaL state is invalid. Details may be included within the response body."
+        "409":
+          description: "Provided AvaL Matching ID is already in use."
+        "500":
+          description: "An unexpected error occurred. Details may be included within the response body."
+  /avalmatchings/{avalId}:
+    patch:
+      tags:
+        - "AvaL Matchings"
+      summary: "Update an existing AvaL Matching"
+      description: ""
+      operationId: "updateAvalMatching"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL Matching that needs to be updated"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      requestBody:
+        description: "AvaL Matching which should be updated."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AvalMatching"
+      responses:
+        "200":
+          description: "Successful operation."
+        "400":
+          description: "Provided AvaL Matching ID of the request body does not correspond to the matching ID within the URI path."
+        "404":
+          description: "AvaL Matching not found."
+        "405":
+          description: "Validation exception because of incorrect state transition."
+        "500":
+          description: "An unexpected error occurred. Details may be included within the response body."
+  /avalmatchings/{avalId}/extendedInformation:
+    post:
+      tags:
+        - "AvaL Matchings"
+      summary: "Update an existing AvaL Matching with new Extended Information."
+      description: ""
+      operationId: "postAvalMatchingExtendedInformation"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL Matching to which the Extended Information should be assigned."
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      requestBody:
+        description: "Extended Information in the form of an AdditionalContent object."
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                $ref: "#/components/schemas/AdditionalContent"
+      responses:
+        "200":
+          description: "Successful operation."
+        "400":
+          description: "Provided Extended Information does not fulfill the specifications. Required parameters missing or invalid. Details may be included within the response body."
+        "404":
+          description: "AvaL Matching not found."
+        "500":
+          description: "An unexpected error occurred. Details may be included within the response body."
+  /aval2matchings:
+    post:
+      tags:
+        - "AvaL 2 Matchings"
+      summary: "Create a new AvaL 2 Matching"
+      description: |
+        For creating a new aval-matching beside for the required parameters according to Aval2Matching it is required to provide the following fields:
+        * taskSite
+        * groupId
+        * period
+        * service
+        * cycleInterval
+        * serviceUom
+        * requiredDeviationDocuments
+        * requiredDocuments
+        * needServiceResponse
+        * needPurchaseOrder
+      operationId: "createAval2Matching"
+      requestBody:
+        description: "AvaL 2 Matching which should be created"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Aval2Matching"
+      responses:
+        "200":
+          description: "Successful operation."
+        "400":
+          description: "The provided AvaL Matching does not fulfill the specifications. Required parameters missing or provided AvaL state is invalid. Details may be included within the response body."
+        "409":
+          description: "Provided AvaL Matching ID is already in use."
+        "500":
+          description: "An unexpected error occurred. Details may be included within the response body."
+        "501":
+          description: "The processing of 'AvaL2Matching' entities is optional and not yet implemented for this API."
+  /aval2matchings/{avalId}:
+    patch:
+      tags:
+        - "AvaL 2 Matchings"
+      summary: "Update an existing AvaL 2 Matching"
+      description: ""
+      operationId: "updateAval2Matching"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL 2 Matching that needs to be updated"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      requestBody:
+        description: "AvaL 2 Matching which should be updated. It is only allowed to update the state and the end of the period of an existing Aval2Matching - in all other cases a new Aval2Matching needs to be performed"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Aval2Matching"
+      responses:
+        "200":
+          description: "Successful operation."
+        "400":
+          description: "Provided AvaL 2 Matching ID of the request body does not correspond to the matching ID within the URI path."
+        "404":
+          description: "AvaL 2 Matching not found."
+        "405":
+          description: "Validation exception because of incorrect state transition."
+        "500":
+          description: "An unexpected error occurred. Details may be included within the response body."
+        "501":
+          description: "The processing of 'AvaL2Matching' entities is optional and not yet implemented for this API."
+  /aval2matchings/{avalId}/extendedInformation:
+    post:
+      tags:
+        - "AvaL 2 Matchings"
+      summary: "Update an existing AvaL 2 Matching with new Extended Information."
+      description: ""
+      operationId: "postAval2MatchingExtendedInformation"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL 2 Matching to which the Extended Information should be assigned."
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      requestBody:
+        description: "Extended Information in the form of an AdditionalContent object."
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                $ref: "#/components/schemas/AdditionalContent"
+      responses:
+        "200":
+          description: "Successful operation."
+        "400":
+          description: "Provided Extended Information does not fulfill the specifications. Required parameters missing or invalid. Details may be included within the response body."
+        "404":
+          description: "AvaL 2 Matching not found."
+        "500":
+          description: "An unexpected error occurred. Details may be included within the response body."
+  /avalmatchings/{avalId}/avaltransactions:
+    post:
+      tags:
+        - "AvaL Transactions"
+      summary: "Transactions of an AvaL Matching (regardless of matching type)"
+      description: ""
+      operationId: "createAvalTransaction"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of the AvaL Matching for the AvaL Transactions."
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      requestBody:
+        description: "AvaL Transaction which should be created."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AvalTransaction"
+      responses:
+        "200":
+          description: "Successful operation."
+        "400":
+          description: "The provided AvaL Transaction does not fulfill the specifications. This may happen because the related AvaL Matching is not in a corresponding state. Details may be included within the response body."
+        "409":
+          description: "Provided AvaL Transaction ID is already in use."
+        "500":
+          description: "An unexpected error occurred. Details may be included within the response body."
+  /avalmatchings/{avalId}/avaltransactions/{transactionId}:
+    patch:
+      tags:
+        - "AvaL Transactions"
+      summary: "Update an existing AvaL Transaction"
+      description: ""
+      operationId: "updateAvalTransaction"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL Matching which owns the AvaL Transaction"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+        - name: "transactionId"
+          in: "path"
+          description: "ID of AvaL Transaction which should be updated"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      requestBody:
+        description: "AvaL Transaction which should be updated."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AvalTransaction"
+      responses:
+        "200":
+          description: "Successful operation."
+        "400":
+          description: "Invalid state (wrong number), missing attributes or something else."
+        "404":
+          description: "AvaL Transaction not found."
+        "405":
+          description: "Validation exception because of incorrect state transition."
+        "422":
+          description: "The provided transaction is valid in content, but was rejected by the receiving API. One of the reasons for this may be that the underlying ERP system has refused to execute or continue the transaction. Details may be included within the response body."
+        "500":
+          description: "An unexpected error occurred. Details may be included within the response body."
+  /avalmatchings/{avalId}/avaltransactions/{transactionId}/avaldocuments:
+    post:
+      tags:
+        - "AvaL Documents"
+      summary: "Add a document to an existing AvaL Transaction"
+      description: "See https://tools.ietf.org/html/rfc7578 for further information about the multipart content type."
+      operationId: "postAvalDocument"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL Matching which owns the AvaL Transaction"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+        - name: "transactionId"
+          in: "path"
+          description: "ID of AvaL Transaction which should be updated"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                documentId:
+                  type: "string"
+                  format: "uuid"
+                filename:
+                  type: "string"
+                  description: "The full filename including any file ending / extension"
+                documentType:
+                  type: "string"
+                  description: "Only IDs from AvaL document type reference list are allowed here (e.g. 'AD.1.101' for 'Leistungsschein'). See https://www.avalstandard.de/aval-stammdaten-webapi/catalog for more information."
+                file:
+                  type: "string"
+                  format: "binary"
+                documentNumber:
+                  type: "string"
+                  description: "A reference number for this document, which enables both AvaL partners to identify the document."
+                metadata:
+                  type: "string"
+                  description: |
+                    A key-value structure of type AdditionalContent for transmitting metadata to be passed on to connected systems. 
+                    An example of this is a document management system (DMS), which can use the metadata for keywording and indexing.
+
+                    Due to an OpenAPI 2.0 limitation, the value must be defined and passed as a string. The actual structure must 
+                    correspond to the JSON representation of the extended information and must be capable of being transformed 
+                    to the type '#/components/schemas/AdditionalContent'. The implementation is responsible for the transformation.  
+
+                    ---
+
+                    Example: 
+                    ```json
+                      {
+                        "contractNumberSupplier": {
+                          "type": "String",
+                          "content": "LO-796632787"
+                        },
+                        "containerNumber": {
+                          "type": "Integer",
+                          "content": "4457893082"
+                        },
+                        "contractNumberClient": {
+                          "type": "String",
+                          "content": "NE-BR-487953Z"
+                        }
+                      }            
+                    ```
+              required:
+                - documentId
+                - filename
+                - documentType
+                - file
+      responses:
+        "200":
+          description: "Document successfully uploaded."
+        "400":
+          description: "The provided AvaL Document does not fulfill the specifications. Details may be included within the response body."
+        "409":
+          description: "Provided AvaL Document ID is already in use."
+        "500":
+          description: "An unexpected error occurred. Details may be included within the response body."
+  /avalmatchings/{avalId}/avaltransactions/{transactionId}/extendedInformation:
+    post:
+      tags:
+        - "AvaL Transactions"
+      summary: "Update an existing AvaL Transaction with new Extended Information."
+      description: ""
+      operationId: "postAvalTransactionExtendedInformation"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL Transaction to which the Extended Information should be assigned."
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+        - name: "transactionId"
+          in: "path"
+          description: "ID of AvaL Transaction which should be updated"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      requestBody:
+        description: "Extended Information in the form of an AdditionalContent object."
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                $ref: "#/components/schemas/AdditionalContent"
+      responses:
+        "200":
+          description: "Successful operation."
+        "400":
+          description: "Provided Extended Information does not fulfill the specifications. Required parameters missing or invalid. Details may be included within the response body."
+        "404":
+          description: "AvaL Transaction not found."
+        "500":
+          description: "An unexpected error occurred. Details may be included within the response body."
+  /info:
+    get:
+      tags:
+        - "AvaL API information"
+      summary: "Provides information about this specific API implementation"
+      operationId: "getInfo"
+      responses:
+        "200":
+          description: "Successfully retrieved information."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiInformation"
+        "500":
+          description: "An unexpected error occurred. Details may be included within the response body."
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
