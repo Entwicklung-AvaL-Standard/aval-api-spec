@@ -28,7 +28,7 @@ info:
     * [Contact form](https://www.avalstandard.de/kontaktformular)
     * [Contact persons](https://www.avalstandard.de/kontakt/ansprechpartner)
 
-  version: "1.5.0"
+  version: "1.7.0"
   title: "AvaL API specification"
   termsOfService: "https://www.avalstandard.de/impressum"
   contact:
@@ -212,7 +212,7 @@ paths:
       tags:
         - "AvaL 2 Matchings"
       summary: "Update an existing AvaL 2 Matching"
-      description: ""
+      description: "Update an existing AvaL 2 Matching. Updates are only acceptable for the state and the end of the period. The end status can be sent multiple times, but the period end date must never be further in the future than previously specified. It can be the same as or earlier than the previous end date."
       operationId: "updateAval2Matching"
       consumes:
         - "application/json"
@@ -240,6 +240,8 @@ paths:
           description: "AvaL 2 Matching not found."
         405:
           description: "Validation exception because of incorrect state transition."
+        422:
+          description: "The end of the matching cannot be accepted because the new planned end of the period is further in the future than originally submitted. The end of the period may be earlier than the original end, but never later."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
         501:
