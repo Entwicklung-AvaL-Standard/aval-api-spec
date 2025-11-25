@@ -28,7 +28,7 @@ info:
     * [Contact form](https://www.avalstandard.de/kontaktformular)
     * [Contact persons](https://www.avalstandard.de/kontakt/ansprechpartner)
 
-  version: "1.5.0"
+  version: "1.6.0"
   title: "AvaL API specification"
   termsOfService: "https://www.avalstandard.de/impressum"
   contact:
@@ -482,6 +482,45 @@ paths:
           description: "AvaL Transaction not found."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
+  /avalmatchings/{avalId}/avaltransactions/{transactionId}/cancellation-request:
+    post:
+      tags:
+        - "AvaL Transactions"
+      summary: "Update an existing AvaL Transaction with new cancellation request."
+      description: "A cancellation request can be accepted or rejected by the client. If it is accepted, the status of the associated transaction must be set to 6 ('Stornierung'). If the cancellation is rejected, then the transaction status should be set to 7 ('Avisierung') and a new planned date should be assigned."
+      operationId: "postAvalTransactionCancellationRequest"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "avalId"
+          in: "path"
+          description: "ID of AvaL Transaction to which the cancellation request should be assigned."
+          required: true
+          type: "string"
+          format: "uuid"
+        - name: "transactionId"
+          in: "path"
+          description: "ID of AvaL Transaction which should be updated"
+          required: true
+          type: "string"
+          format: "uuid"
+        - in: "body"
+          name: "body"
+          description: "The cancellation request"
+          required: true
+          schema:
+            $ref: "#/definitions/CancellationRequest"
+      responses:
+        200:
+          description: "Successful operation."
+        400:
+          description: "Provided cancellation request does not fulfill the specifications. Required parameters missing or invalid. Details may be included within the response body."
+        404:
+          description: "AvaL Transaction not found."
+        500:
+          description: "An unexpected error occurred. Details may be included within the response body."
   /info:
     get:
       tags:
@@ -896,6 +935,18 @@ definitions:
         type: "string"
         description: "This attribute contains the version of your API. This may be useful for monitoring or debugging purpose."
         example: "21.2.4"
+  CancellationRequest:
+    type: "object"
+    required:
+      - reason
+    properties:
+      reason:
+        type: string
+        example: "The execution date is too far in the future."
+      extendedInformation:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/AdditionalContent'
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
