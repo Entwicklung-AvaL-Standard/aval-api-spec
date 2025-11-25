@@ -487,7 +487,7 @@ paths:
       tags:
         - "AvaL Transactions"
       summary: "Update an existing AvaL Transaction with new cancellation request."
-      description: ""
+      description: "A cancellation request can be accepted or rejected by the client. If it is accepted, the status of the associated transaction must be set to 6 ('Stornierung'). If the cancellation is accepted, then the transaction status should be set to 7 ('Avisierung') and a new planned date should be assigned."
       operationId: "postAvalTransactionCancellationRequest"
       consumes:
         - "application/json"
