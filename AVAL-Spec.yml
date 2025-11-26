@@ -27,7 +27,7 @@ info:
     Contact:
     * [Contact form](https://www.avalstandard.de/kontaktformular)
     * [Contact persons](https://www.avalstandard.de/kontakt/ansprechpartner)
-version: "1.7.0"
+  version: "1.7.1"
   title: "AvaL API specification"
   termsOfService: "https://www.avalstandard.de/impressum"
   contact:
@@ -483,7 +483,7 @@ paths:
           description: "AvaL Transaction not found."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
-  /avalmatchings/{avalId}/avaltransactions/{transactionId}/cancellation-request:
+  /avalmatchings/{avalId}/avaltransactions/{transactionId}/cancellationRequest:
     post:
       tags:
         - "AvaL Transactions"
