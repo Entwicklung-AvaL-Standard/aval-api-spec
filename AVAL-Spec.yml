@@ -27,7 +27,7 @@ info:
     Contact:
     * [Contact form](https://www.avalstandard.de/kontaktformular)
     * [Contact persons](https://www.avalstandard.de/kontakt/ansprechpartner)
-  version: "1.7.1"
+  version: "1.8.0"
   title: "AvaL API specification"
   termsOfService: "https://www.avalstandard.de/impressum"
   contact:
@@ -877,18 +877,23 @@ definitions:
         example: "Tor verschlossen"
       complaintReason:
         type: "string"
-        description: "Only AvaL IDs from https://www.avalstandard.de/aval-stammdaten-webapi/catalog/AV.1/entries are allowed here."
+        description: "DEPRECATED: As of version 1.8.0 use the new attribute 'complaintReasons'. The attribute 'complaintReason' will be removed in future version. Only AvaL IDs from https://www.avalstandard.de/aval-stammdaten-webapi/catalog/AV.1/entries are allowed here."
         example: "AV.1.104"
       variationNotes:
         type: "string"
       alternateAvalId:
-        description: "This attribute is currently not used. It may be removed in one of the next versions."
+        description: "DEPRECATED: As of version 1.8.0 use the new attribute 'complaintReasons'. The attribute 'alternateAvalId' will be removed in future version. This attribute is currently not used. It may be removed in one of the next versions."
         type: "string"
         format: "uuid"
       alternateMatchedAvalId:
-        description: "Use this attribute if you want to signal to the client in the response (AvaL state 10 only) that there is a better matching for this transaction. For example, the emptying of a container with mixed scrap was agreed upon during matching. However, steel scrap was actually disposed of and a valid matching already exists for this. This is exactly what you pass as “alternateMatchedAvalId”."
+        description: "DEPRECATED: As of version 1.8.0 use the new attribute 'complaintReasons'. The attribute 'alternateMatchedAvalId' will be removed in future version. Use this attribute if you want to signal to the client in the response (AvaL state 10 only) that there is a better matching for this transaction. For example, the emptying of a container with mixed scrap was agreed upon during matching. However, steel scrap was actually disposed of and a valid matching already exists for this. This is exactly what you pass as “alternateMatchedAvalId”."
         type: "string"
         format: "uuid"
+      complaintReasons:
+        description: "The key value represents an incident and corresponds to an entry from https://www.avalstandard.de/aval-stammdaten-webapi/catalog/AV.1/entries or a subsequent version of that site."
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/ComplaintReason'
       extendedInformation:
         type: object
         additionalProperties:
@@ -948,6 +953,18 @@ definitions:
         type: object
         additionalProperties:
           $ref: '#/definitions/AdditionalContent'
+  ComplaintReason:
+    type: "object"
+    required:
+      - amount
+    properties:
+      amount:
+        type: "integer"
+        format: "int32"
+        description: "Indicates how often this incident has occurred. The minimum value is ‘1’."
+      evaluationParameter:
+        $ref: '#/definitions/AdditionalContent'
+        description: "Specifies how the incident should be evaluated."
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
