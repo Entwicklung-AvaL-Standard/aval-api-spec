@@ -27,7 +27,7 @@ info:
     Contact:
     * [Contact form](https://www.avalstandard.de/kontaktformular)
     * [Contact persons](https://www.avalstandard.de/kontakt/ansprechpartner)
-  version: "1.7.1"
+  version: "1.9.0"
   title: "AvaL API specification"
   termsOfService: "https://www.avalstandard.de/impressum"
   contact:
@@ -522,6 +522,47 @@ paths:
           description: "AvaL Transaction not found."
         500:
           description: "An unexpected error occurred. Details may be included within the response body."
+  /avalmatchings/{avalId}/avaltransactions/{transactionId}/documentRequest:
+    post:
+      tags:
+        - "AvaL Transactions"
+      summary: "Request for a revised version of a document."
+      description: |
+        In AvaL 2, Aval2Matching allows optionally specify document types that must be sent to the client before a transaction based on this Aval2Matching is completed (Status 9 or Status 10). 
+        If the client identifies discrepancies in a received document, they can use the following call to request a corrected version of the disputed document type from the contractor.
+        The request is made only after the transaction is completed and applies to the most recently submitted document of this type that was required to be provided upon completion.
+      operationId: "postAvalTransactionDocumentRequest"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: avalId
+          in: path
+          required: true
+          type: string
+        - name: transactionId
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentRequest'
+      responses:
+        200:
+          description: "Successful operation."
+        400:
+          description: "Provided document request does not fulfill the specifications. Required parameters missing or invalid. Details may be included within the response body."
+        404:
+          description: "Transaction not found."
+        422:
+          description: "The document type is not included in Aval2Matching for the transmitted transaction status."
+        500:
+          description: "An unexpected error occurred. Details may be included within the response body."
+        501:
+          description: "The document request function is optional and not yet implemented for this API."
   /info:
     get:
       tags:
@@ -948,6 +989,18 @@ definitions:
         type: object
         additionalProperties:
           $ref: '#/definitions/AdditionalContent'
+  DocumentRequest:
+    type: "object"
+    required:
+      - documentType
+      - reason
+    properties:
+      documentType:
+        type: string
+        description: "Document type as defined in https://www.avalstandard.de/aval-stammdaten-webapi/catalog/AD.1/entries or a subsequent version."
+      reason:
+        type: string
+        description: "Reason for requesting the document."
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
